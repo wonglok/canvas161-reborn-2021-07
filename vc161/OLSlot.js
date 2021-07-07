@@ -91,15 +91,31 @@ function SlotDetailsDisplay() {
 }
 
 function SlotStatus() {
-  CState.makeKeyReactive("slotData");
   CState.makeKeyReactive("taken");
+
+  let [show, setShow] = useState(false);
+  useEffect(() => {
+    getFire()
+      .database()
+      .ref(`/maps/${CState.currentMapID}/slotData/${CState.currentSlotID}`)
+      .once("value", (snap) => {
+        if (snap) {
+          let val = snap.val();
+          if (val) {
+            setShow(true);
+          } else {
+            setShow(true);
+          }
+        }
+      });
+  }, []);
 
   let hasData = CState.slotData.find((e) => e.key === CState.currentSlotID);
   let isBought = CState.taken.find((e) => e.key === CState.currentSlotID);
 
   return (
     <>
-      {hasData && (
+      {show && hasData && (
         <div className="text-lg text-center p-3">
           <div className="mb-3">
             Slot {CState.currentSlotID.split("_").join("-")} is{" "}

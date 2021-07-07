@@ -266,7 +266,7 @@ function HTMLContent() {
       CState.currentSlotID = router.query.slotID;
       CState.overlay = "slot";
     }
-  }, [router.query.slotID, CState.slotData]);
+  }, [CState.slotData]);
 
   //
   return (
