@@ -12,6 +12,11 @@ export const getCStateItems = () => {
       position: new Vector3(0, 25, 25),
     },
 
+    buildingView: {
+      target: new Vector3(),
+      position: new Vector3(0, 25, 25),
+    },
+
     //
     topView: {
       target: new Vector3(),

@@ -5,21 +5,18 @@ import {
 } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
+import { Vector3 } from "three";
 import { CState } from "./CState";
 
 export function UIControls() {
   return (
     <>
-      {CState.gameMode === "map" && (
-        <>
-          {CState.viewMode === "topView" && <TopView></TopView>}
-          {CState.viewMode === "roomView" && <RoomView></RoomView>}
-          {CState.viewMode === "orbitView" && <OribtView></OribtView>}
-        </>
-      )}
-      {CState.gameMode === "editor" && (
-        <>{CState.viewMode === "orbitView" && <OribtView></OribtView>}</>
-      )}
+      <>
+        {CState.viewMode === "topView" && <TopView></TopView>}
+        {CState.viewMode === "roomView" && <RoomView></RoomView>}
+        {CState.viewMode === "orbitView" && <OribtView></OribtView>}
+        {CState.viewMode === "buildingView" && <BuildingView></BuildingView>}
+      </>
     </>
   );
 }
@@ -70,6 +67,40 @@ function RoomView() {
         dampingFactor={0.05}
         enabled={true}
         maxDistance={80}
+        minDistance={30}
+      ></MapControls>
+    </group>
+  );
+}
+
+function BuildingView() {
+  let controls = useRef();
+  let camera = useRef();
+
+  useEffect(() => {
+    CState.BuildingView = {
+      target: new Vector3(),
+      position: new Vector3(0, 25, 25),
+    };
+  }, []);
+  useCamRig({ controls, camera, viewMode: "buildingView" });
+
+  return (
+    <group>
+      <PerspectiveCamera
+        ref={camera}
+        far={500}
+        near={0.1}
+        fov={45}
+        makeDefault
+      ></PerspectiveCamera>
+      <MapControls
+        ref={controls}
+        enableRotate={false}
+        panSpeed={1.5}
+        dampingFactor={0.05}
+        enabled={true}
+        maxDistance={250}
         minDistance={30}
       ></MapControls>
     </group>

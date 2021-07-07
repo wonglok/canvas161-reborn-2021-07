@@ -6,13 +6,20 @@ import { CState } from "./CState";
 import { HDRI } from "../vfx-library/HDRI";
 import { UIControls } from "./UIControls";
 import { Text } from "@react-three/drei";
-import { BoxBufferGeometry, Color } from "three";
+import {
+  BoxBufferGeometry,
+  BoxHelper,
+  Color,
+  Mesh,
+  SphereGeometry,
+} from "three";
 import { CircleBufferGeometry } from "three";
 // import { LoginChecker } from "./LoginChecker";
 import { OLSlot } from "./OLSlot";
 import { useAutoEvent } from "../vfx-others/ENUitls";
 import { getFire, toArray } from "../vfx-others/ENFire";
 import router from "next/router";
+import { MeshBasicMaterial } from "three";
 
 //
 export function C161({ mapID = "first-gen" }) {
@@ -33,6 +40,7 @@ export function C161({ mapID = "first-gen" }) {
 }
 
 function WebGLCanvas() {
+  CState.makeKeyReactive("viewMode");
   CState.makeKeyReactive("gameMode");
   let ref = useRef();
   let [dpr, setDPR] = useState([1, 3]);
@@ -75,19 +83,35 @@ function WebGLCanvas() {
         <HDRI></HDRI>
         {CState.gameMode === "map" && (
           <group>
-            <WebGLContent></WebGLContent>
+            <GridContent></GridContent>
           </group>
         )}
-        {CState.gameMode === "main" && (
-          <group>
-            <mesh>
-              <boxBufferGeometry></boxBufferGeometry>
-              <sphereBufferGeometry></sphereBufferGeometry>
-            </mesh>
-          </group>
-        )}
+        {CState.gameMode === "editor" && <Editor></Editor>}
+
+        <UIControls></UIControls>
       </Canvas>
     </div>
+  );
+}
+
+function Editor() {
+  let ref = useRef();
+  useEffect(() => {
+    if (ref.current) {
+      const sphere = new BoxBufferGeometry(10, 10, 10);
+      const object = new Mesh(sphere, new MeshBasicMaterial(0xff0000));
+      const box = new BoxHelper(object, 0x000000);
+      ref.current.add(box);
+    }
+  }, []);
+
+  return (
+    <group ref={ref}>
+      <mesh>
+        <meshStandardMaterial color={"#ff0000"}></meshStandardMaterial>
+        <sphereBufferGeometry args={[5, 32, 32]}></sphereBufferGeometry>
+      </mesh>
+    </group>
   );
 }
 
@@ -171,7 +195,7 @@ function Slot({ geometry, taken, value, onClickSlot = () => {} }) {
   );
 }
 
-function WebGLContent() {
+function GridContent() {
   const myGeometry = new BoxBufferGeometry(10, 1, 10, 2, 2, 2);
   myGeometry.rotateX(Math.PI * -0.5);
 
@@ -257,7 +281,6 @@ function WebGLContent() {
       ></gridHelper> */}
 
       {/* UI Controls */}
-      <UIControls></UIControls>
 
       {/*  */}
     </>
@@ -269,6 +292,7 @@ function HTMLContent() {
   CState.makeKeyReactive("overlay");
   CState.makeKeyReactive("slotData");
   CState.makeKeyReactive("taken");
+  CState.makeKeyReactive("gameMode");
 
   useAutoEvent("keydown", (ev) => {
     if (ev.key.toLowerCase() === "escape") {
@@ -286,6 +310,26 @@ function HTMLContent() {
   //
   return (
     <>
+      {CState.gameMode === "editor" && (
+        <>
+          <div className="absolute top-0 left-0 m-3 ">
+            <svg
+              width="24"
+              height="24"
+              xmlns="http://www.w3.org/2000/svg"
+              fillRule="evenodd"
+              clipRule="evenodd"
+              className="cursor-pointer"
+              onClick={() => {
+                //
+                CState.gameMode = "map";
+              }}
+            >
+              <path d="M2.117 12l7.527 6.235-.644.765-9-7.521 9-7.479.645.764-7.529 6.236h21.884v1h-21.883z" />
+            </svg>
+          </div>
+        </>
+      )}
       {CState.overlay === "slot" && (
         <>
           <div className="h-full w-full absolute top-0 left-0">

@@ -126,7 +126,7 @@ function SlotStatus() {
           setShow(val);
         }
       });
-  }, []);
+  }, [CState.reload]);
 
   // let hasData = CState.slotData.find((e) => e.key === CState.currentSlotID);
   // let isBoughtBy = CState.taken.find((e) => e.key === CState.currentSlotID);
@@ -147,7 +147,7 @@ function SlotStatus() {
                   onClick={() => {
                     //
                     CState.overlay = "";
-                    CState.viewMode = "orbitView";
+                    CState.viewMode = "buildingView";
                     CState.gameMode = "editor";
                   }}
                   className="bg-green-500 px-6 my-3 py-3 text-white rounded-full shadow-md drop-shadow-lg "
