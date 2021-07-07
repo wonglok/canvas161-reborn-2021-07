@@ -1,7 +1,7 @@
 export const firebaseConfig = {
   apiKey: "AIzaSyAPuwK2yMl025KLVTnGDdN34XxHBYQHoVk",
   authDomain: "effect-node-by-you.firebaseapp.com",
-  databaseURL: "https://en-you.firebaseio.com/",
+  databaseURL: "https://c161.firebaseio.com/",
   projectId: "effect-node-by-you",
   storageBucket: "effect-node-by-you.appspot.com",
   messagingSenderId: "587774316246",

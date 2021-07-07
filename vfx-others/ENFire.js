@@ -1,7 +1,7 @@
 import FIREBASE from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
-import { firebaseConfig } from "./CONFIG";
+import { firebaseConfig } from "./ENConfig";
 
 export const FireCache = new Map();
 export function setupFirebase() {
@@ -74,6 +74,10 @@ export const onReady = () => {
   });
 };
 
+export const loginPw = async ({ email, password }) => {
+  return FIREBASE.auth().signInWithEmailAndPassword(email, password);
+};
+
 export const loginGuest = async () => {
   return FIREBASE.auth().signInAnonymously();
 };
@@ -89,3 +93,24 @@ if (typeof window !== "undefined") {
 }
 
 export const firebase = FIREBASE;
+
+export const getFire = () => {
+  setupFirebase();
+  return FIREBASE;
+};
+
+export const toArray = (snap) => {
+  let arr = [];
+  if (!snap) {
+    return [];
+  } else {
+    for (let kn in snap) {
+      arr.push({
+        key: kn,
+        value: snap[kn],
+      });
+    }
+
+    return arr;
+  }
+};

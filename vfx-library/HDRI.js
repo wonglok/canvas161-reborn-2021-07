@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { sRGBEncoding } from "three";
 import { PMREMGenerator, TextureLoader } from "three";
 
-export function ENHDRI() {
+export function HDRI() {
   // let RGBELoader = require("three/examples/jsm/loaders/RGBELoader.js")
   //   .RGBELoader;
   let url = `/texture/bluradam.png`;
