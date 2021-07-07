@@ -109,7 +109,7 @@ export function HTMLSidebarEditor() {
                           .set(data.itemURL)
                           .then(() => {
                             console.log("wallpaper set");
-                            CState.refreshBuilding++;
+                            CState.refreshBuilding = e.key;
                           });
 
                         //

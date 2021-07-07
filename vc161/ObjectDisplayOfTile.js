@@ -65,6 +65,8 @@ export function ObjectDisplayOfTile({ value, onClicker = () => {} }) {
 }
 function Blocker({ kv, geometries, onClicker }) {
   CState.makeKeyReactive("refreshBuilding");
+
+  //
   let isDown = false;
 
   let refBlocker = useRef();
@@ -83,18 +85,23 @@ function Blocker({ kv, geometries, onClicker }) {
     let item = refBlocker.current;
     if (item) {
       if (kv?.value?.wallTexture) {
-        if (item.material.map?.image?.src !== kv.value.wallTexture) {
-          item.material.map = new TextureLoader().load(
-            `${kv.value.wallTexture}`
-          );
-        } else if (!item.material.map) {
+        item.material.map = new TextureLoader().load(`${kv.value.wallTexture}`);
+      }
+    }
+  }, [JSON.stringify(kv)]);
+
+  useEffect(() => {
+    let item = refBlocker.current;
+    if (item) {
+      if (kv?.value?.wallTexture) {
+        if (CState.refreshBuilding === kv.key) {
           item.material.map = new TextureLoader().load(
             `${kv.value.wallTexture}`
           );
         }
       }
     }
-  }, [JSON.stringify(kv), CState.refreshBuilding]);
+  }, [CState.refreshBuilding]);
 
   return (
     <mesh
