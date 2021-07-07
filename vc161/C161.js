@@ -42,6 +42,11 @@ export function C161({ mapID = "first-gen" }) {
 function WebGLCanvas() {
   CState.makeKeyReactive("viewMode");
   CState.makeKeyReactive("gameMode");
+
+  CState.useReactiveKey("gameMode", () => {
+    window.dispatchEvent(new Event("resize"));
+  });
+
   let ref = useRef();
   let [dpr, setDPR] = useState([1, 3]);
 
@@ -51,7 +56,19 @@ function WebGLCanvas() {
   }, []);
 
   return (
-    <div ref={ref} className="h-full w-full absolute top-0 left-0">
+    <div
+      ref={ref}
+      className={"h-full w-full absolute top-0 right-0 "}
+      style={
+        CState.gameMode === "editor"
+          ? {
+              width: `calc(100% - 275px)`,
+            }
+          : {
+              width: `calc(100% - 0px)`,
+            }
+      }
+    >
       <Canvas
         dpr={dpr}
         onCreated={({ gl }) => {
@@ -342,6 +359,19 @@ function HTMLContent() {
     <>
       {CState.gameMode === "editor" && (
         <>
+          <div
+            className="absolute top-0 left-0 h-full bg-gray-300"
+            style={{ width: `275px` }}
+          >
+            <br />
+            <br />
+            <div className="sidebar">Hi this is the side bar</div>
+          </div>
+        </>
+      )}
+
+      {CState.gameMode === "editor" && (
+        <>
           <div className="absolute top-0 left-0 m-3 ">
             <svg
               width="24"
@@ -360,6 +390,7 @@ function HTMLContent() {
           </div>
         </>
       )}
+
       {CState.overlay === "slot" && (
         <>
           <div className="h-full w-full absolute top-0 left-0">
