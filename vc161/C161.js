@@ -140,7 +140,8 @@ function Slot({ geometry, taken, value, onClickSlot = () => {} }) {
 
         {/*  */}
         <Text position-y={1} rotation-x={Math.PI * -0.25} fontSize={1}>
-          {value._id}
+          {/* {value._id} */}
+          {value.owner ? value.owner.userDisplayName : value._id}
         </Text>
       </group>
     </>
