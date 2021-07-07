@@ -55,7 +55,7 @@ function RoomView() {
       <PerspectiveCamera
         ref={camera}
         far={1000}
-        near={0.1}
+        near={5}
         fov={45}
         makeDefault
       ></PerspectiveCamera>
