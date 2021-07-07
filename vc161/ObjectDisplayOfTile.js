@@ -1,6 +1,6 @@
 import { Detailed, Text } from "@react-three/drei";
-import { useMemo } from "react";
-import { Mesh } from "three";
+import { Suspense, useEffect, useMemo, useRef } from "react";
+import { Mesh, TextureLoader } from "three";
 import { toArray } from "../vfx-others/ENFire";
 import { CState } from "./CState";
 
@@ -9,20 +9,20 @@ export function ObjectDisplayOfTile({ value, onClicker = () => {} }) {
 
   let buildings = toArray(buildingObj);
 
-  let materials = {
-    //
-    default: (
-      <meshStandardMaterial
-        metalness={0.8}
-        roughness={0.1}
-        color={"#ffffff"}
-      ></meshStandardMaterial>
-    ),
-  };
+  let aroundWidth = 4.5;
+  let levelHeight = aroundWidth / 1.1618;
   let geometries = {
     //
-    box: <boxBufferGeometry args={[1, 1, 1, 2, 2, 2]}></boxBufferGeometry>,
-    ball: <sphereBufferGeometry args={[0.5, 25, 25]}></sphereBufferGeometry>,
+    box: (
+      <boxBufferGeometry
+        args={[aroundWidth, levelHeight, aroundWidth, 2, 2, 2]}
+      ></boxBufferGeometry>
+    ),
+    ball: (
+      <boxBufferGeometry
+        args={[aroundWidth, levelHeight, aroundWidth, 2, 2, 2]}
+      ></boxBufferGeometry>
+    ),
   };
 
   return (
@@ -30,37 +30,75 @@ export function ObjectDisplayOfTile({ value, onClicker = () => {} }) {
       <Detailed distances={[0, 80]}>
         <Text
           position-y={1}
-          position-z={3}
+          position-z={4}
           rotation-x={Math.PI * -0.25}
           fontSize={1}
         >
           {/* {value._id} */}
-          {value.owner ? value?.owner?.userDisplayName || "" : value?._id || ""}
+          {value.owner
+            ? value?.owner?.buildingText || value?.owner?.userDisplayName
+            : value?._id || ""}
         </Text>
         <group></group>
       </Detailed>
 
       {buildings.map((e, i) => {
         return (
-          <group key={e.key} position-y={0.5 + 1 * i}>
-            <Blocker
-              onClicker={(ev) => {
-                onClicker({ ...ev, value });
-              }}
-              materials={materials}
-              geometries={geometries}
-              kv={e}
-            ></Blocker>
+          <group
+            key={e.key}
+            position-y={levelHeight * 0.5 + (levelHeight + 0.1) * i}
+          >
+            <Suspense fallback={null}>
+              <Blocker
+                onClicker={(ev) => {
+                  onClicker({ ...ev, value });
+                }}
+                geometries={geometries}
+                kv={e}
+              ></Blocker>
+            </Suspense>
           </group>
         );
       })}
     </group>
   );
 }
-function Blocker({ kv, materials, geometries, onClicker }) {
+function Blocker({ kv, geometries, onClicker }) {
+  CState.makeKeyReactive("refreshBuilding");
   let isDown = false;
+
+  let refBlocker = useRef();
+  let materials = {
+    //
+    default: (
+      <meshStandardMaterial
+        metalness={0.5}
+        roughness={1}
+        color={"#ffffff"}
+      ></meshStandardMaterial>
+    ),
+  };
+
+  useEffect(() => {
+    let item = refBlocker.current;
+    if (item) {
+      if (kv?.value?.wallTexture) {
+        if (item.material.map?.image?.src !== kv.value.wallTexture) {
+          item.material.map = new TextureLoader().load(
+            `${kv.value.wallTexture}`
+          );
+        } else {
+          item.material.map = new TextureLoader().load(
+            `${kv.value.wallTexture}`
+          );
+        }
+      }
+    }
+  }, [JSON.stringify(kv)]);
+
   return (
     <mesh
+      ref={refBlocker}
       onPointerDown={() => {
         isDown = true;
       }}

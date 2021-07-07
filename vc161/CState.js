@@ -41,6 +41,11 @@ export const getCStateItems = () => {
     movement: 0,
 
     gameMode: "map",
+
+    refreshBuilding: 0,
+    panel: ``,
+
+    esc: [],
   };
 };
 
@@ -90,3 +95,5 @@ export const obtainSlot = ({ mapID, slotID }) => {
 //                 CState.mapID = "first";
 //                 CState.currentSlotID = v.data.slotID;
 //                 CState.overlay = "slot";
+
+export function uploadFileToUser() {}

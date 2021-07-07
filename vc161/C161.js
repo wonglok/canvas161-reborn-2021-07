@@ -106,6 +106,12 @@ function WebGLCanvas() {
         }}
       >
         <HDRI></HDRI>
+        <ambientLight intensity={0.5}></ambientLight>
+        <directionalLight
+          position={[10, 10, 10]}
+          intensity={0.5}
+        ></directionalLight>
+
         {/* {CState.gameMode === "map" && ( */}
         <group visible={CState.gameMode === "map"}>
           <GridContent></GridContent>
@@ -180,7 +186,9 @@ function Slot({ value, resetToOrigin = false, onClickSlot = () => {} }) {
           scale={0.998}
           rotation-x={Math.PI * -0.5}
           onPointerEnter={(ev) => {
-            document.body.style.cursor = `pointer`;
+            if (CState.gameMode === "map") {
+              document.body.style.cursor = `pointer`;
+            }
             ev.object.material.color = hoverColor;
           }}
           onPointerLeave={(ev) => {
@@ -195,7 +203,11 @@ function Slot({ value, resetToOrigin = false, onClickSlot = () => {} }) {
           onPointerUp={(ev) => {
             ev.object.material.color = readyColor;
 
-            if (CState.movement <= 20 && CState.isDown) {
+            if (
+              CState.movement <= 20 &&
+              CState.isDown &&
+              CState.gameMode === "map"
+            ) {
               onClickSlot({ ...ev, value });
             }
             CState.movement = 0;
@@ -205,7 +217,9 @@ function Slot({ value, resetToOrigin = false, onClickSlot = () => {} }) {
             CState.movement++;
           }}
           onClick={(ev) => {
-            onClickSlot({ ...ev, value });
+            if (CState.gameMode === "map") {
+              onClickSlot({ ...ev, value });
+            }
 
             // ev.object.material.color = downColor;
             // setTimeout(() => {
@@ -296,12 +310,10 @@ function GridContent() {
             <Slot
               value={i.value}
               onClickSlot={(ev) => {
-                //
-                //
-                CState.currentSlotID = ev.value._id;
-                CState.overlay = "slot";
-
-                //
+                if (CState.gameMode === "map") {
+                  CState.currentSlotID = ev.value._id;
+                  CState.overlay = "slot";
+                }
               }}
             ></Slot>
           </group>
@@ -329,9 +341,27 @@ function HTMLContent() {
   CState.makeKeyReactive("taken");
   CState.makeKeyReactive("gameMode");
 
+  CState.useReactiveKey("overlay", () => {
+    if (CState.overlay) {
+      CState.esc.push("overlay");
+    }
+  });
+  CState.useReactiveKey("panel", () => {
+    if (CState.panel) {
+      CState.esc.push("panel");
+    }
+  });
+
   useAutoEvent("keydown", (ev) => {
     if (ev.key.toLowerCase() === "escape") {
-      CState.overlay = "ready";
+      if (CState.esc[0] === "overlay") {
+        CState.overlay = "";
+        CState.esc.shift();
+      }
+      if (CState.esc[0] === "panel") {
+        CState.panel = "";
+        CState.esc.shift();
+      }
     }
   });
 
@@ -365,7 +395,7 @@ function HTMLContent() {
           >
             <svg
               onClick={() => {
-                CState.overlay = "ready";
+                CState.overlay = "";
               }}
               className=" cursor-pointer"
               width="24"
