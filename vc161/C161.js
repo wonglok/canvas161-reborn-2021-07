@@ -13,7 +13,7 @@ import {
   Mesh,
   SphereGeometry,
 } from "three";
-import { CircleBufferGeometry } from "three";
+import { ObjectDisplayOfTile } from "./ObjectDisplayOfTile";
 // import { LoginChecker } from "./LoginChecker";
 import { OLSlot } from "./OLSlot";
 import { useAutoEvent } from "../vfx-others/ENUitls";
@@ -236,6 +236,8 @@ function Slot({ value, resetToOrigin = false, onClickSlot = () => {} }) {
           <planeBufferGeometry args={[10, 10]}></planeBufferGeometry>
         </mesh>
 
+        <ObjectDisplayOfTile value={value}></ObjectDisplayOfTile>
+
         {/*  */}
         <Text position-y={1} rotation-x={Math.PI * -0.25} fontSize={1}>
           {/* {value._id} */}
@@ -365,7 +367,7 @@ function HTMLContent() {
           >
             <br />
             <br />
-            <div className="ml-3">Side Bar Stuff</div>
+            <div className="ml-3">Sidebar Stuff</div>
             <div className="ml-3"></div>
           </div>
         </>

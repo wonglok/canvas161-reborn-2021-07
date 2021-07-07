@@ -152,7 +152,7 @@ function SlotStatus() {
                   }}
                   className="bg-indigo-500 px-6 my-3 py-3 text-white rounded-full shadow-md drop-shadow-lg "
                 >
-                  Edit My Land
+                  Develop on My Land
                 </button>
               </div>
             </div>
