@@ -19,7 +19,7 @@ import { OLSlot } from "./OLSlot";
 import { useAutoEvent } from "../vfx-others/ENUitls";
 import { getFire, toArray } from "../vfx-others/ENFire";
 import router from "next/router";
-import { MeshBasicMaterial } from "three";
+// import { MeshBasicMaterial } from "three";
 import { HTMLSidebarEditor } from "./HTMLSidebarEditor";
 
 export function getPanelHeight() {
@@ -121,22 +121,6 @@ function WebGLCanvas() {
 }
 
 function Editor() {
-  let ref = useRef();
-  useEffect(() => {
-    if (ref.current) {
-      const myGeo = new BoxBufferGeometry(10, 10, 10);
-      myGeo.translate(0, 5, 0);
-      const object = new Mesh(myGeo, new MeshBasicMaterial(0xff0000));
-      const box = new BoxHelper(object, 0x000000);
-      ref.current.add(box);
-      return () => {
-        if (ref.current) {
-          ref.current.remove(box);
-        }
-      };
-    }
-  }, []);
-
   let [value, setValue] = useState(false);
 
   useEffect(() => {
@@ -146,26 +130,17 @@ function Editor() {
       .database()
       .ref(`/maps/${CState.currentMapID}/slotData/${CState.currentSlotID}`)
       .on("value", (snap) => {
-        //
-
         if (snap) {
           let val = snap.val();
           if (val) {
             setValue(val);
-            console.log(val);
           }
         }
       });
   }, []);
 
   return (
-    <group ref={ref}>
-      {/* <mesh>
-        <meshStandardMaterial color={"#ff0000"}></meshStandardMaterial>
-        <sphereBufferGeometry args={[5, 32, 32]}></sphereBufferGeometry>
-      </mesh> */}
-      {value && <Slot resetToOrigin={true} value={value}></Slot>}
-    </group>
+    <group>{value && <Slot resetToOrigin={true} value={value}></Slot>}</group>
   );
 }
 
@@ -187,6 +162,7 @@ function Slot({ value, resetToOrigin = false, onClickSlot = () => {} }) {
       CState.movement++;
     }
   });
+
   let resetToOriginFactor = resetToOrigin ? 0.0 : 1.0;
   return (
     <>

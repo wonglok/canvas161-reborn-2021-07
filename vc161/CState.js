@@ -30,7 +30,7 @@ export const getCStateItems = () => {
 
     //
     overlay: ``,
-    currentMapID: "first-gen",
+    currentMapID: false,
     currentSlotID: false,
 
     taken: [],
