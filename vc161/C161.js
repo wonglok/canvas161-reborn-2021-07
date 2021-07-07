@@ -365,7 +365,8 @@ function HTMLContent() {
           >
             <br />
             <br />
-            <div className="sidebar">Hi this is the side bar</div>
+            <div className="ml-3">Side Bar Stuff</div>
+            <div className="ml-3"></div>
           </div>
         </>
       )}
