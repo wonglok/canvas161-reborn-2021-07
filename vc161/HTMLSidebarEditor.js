@@ -252,6 +252,7 @@ function UploadButton() {
                   .child(getID())
                   .put(first)
                   .then((snap) => {
+                    CState.refreshGallery++;
                     console.log("Uploaded a blob or file!");
                   });
               }
