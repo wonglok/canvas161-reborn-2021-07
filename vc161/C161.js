@@ -259,6 +259,7 @@ function WebGLContent() {
 function HTMLContent() {
   //
   CState.makeKeyReactive("overlay");
+  CState.makeKeyReactive("slotData");
 
   useAutoEvent("keydown", (ev) => {
     if (ev.key.toLowerCase() === "escape") {
@@ -272,7 +273,7 @@ function HTMLContent() {
       {CState.overlay === "slot" && (
         <>
           <div className="h-full w-full absolute top-0 left-0">
-            <OLSlot></OLSlot>
+            {CState.slotData.length !== 0 && <OLSlot></OLSlot>}
             {/* <LoginChecker></LoginChecker> */}
           </div>
           <div

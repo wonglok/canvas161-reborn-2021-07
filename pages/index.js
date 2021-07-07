@@ -3,5 +3,5 @@
 import { C161 } from "../vc161/C161";
 
 export default function HomeLandingPage() {
-  return <C161 mapID="first-gen"></C161>;
+  return <C161 mapID="season-1"></C161>;
 }

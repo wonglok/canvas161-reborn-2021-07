@@ -1,20 +1,10 @@
 import router from "next/router";
 import { useEffect, useState } from "react";
-import { getFire } from "../vfx-others/ENFire";
+import { getFire, loginGoogle } from "../vfx-others/ENFire";
 import { CState, obtainSlot } from "./CState";
 export function OLSlot() {
   let [reload, reloader] = useState(0);
   let hasData = CState.slotData.find((e) => e.key === CState.currentSlotID);
-
-  useEffect(() => {
-    if (!hasData) {
-      setTimeout(() => {
-        CState.overlay = "";
-
-        router.push(`/`);
-      }, 3 * 1000);
-    }
-  }, []);
 
   return (
     <>
@@ -28,7 +18,7 @@ export function OLSlot() {
           </div>
 
           <div className="flex items-center mt-12 justify-center">
-            Cant find this slot. Will explore others in 3 Seconds....
+            Cant find this slot.
           </div>
         </div>
       )}
@@ -109,13 +99,20 @@ function SlotStatus() {
               <button
                 onClick={() => {
                   //
-                  console.log(123);
-                  obtainSlot({
-                    mapID: CState.currentMapID,
-                    slotID: CState.currentSlotID,
-                  }).then(() => {
-                    CState.reload++;
-                  });
+
+                  if (getFire().auth().currentUser) {
+                    obtainSlot({
+                      mapID: CState.currentMapID,
+                      slotID: CState.currentSlotID,
+                    }).then(() => {});
+                  } else {
+                    loginGoogle().then(() => {
+                      obtainSlot({
+                        mapID: CState.currentMapID,
+                        slotID: CState.currentSlotID,
+                      }).then(() => {});
+                    });
+                  }
 
                   //
                 }}
