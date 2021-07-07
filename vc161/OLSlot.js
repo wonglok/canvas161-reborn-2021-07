@@ -22,7 +22,7 @@ export function OLSlot() {
           </div>
         </div>
       )}
-      {hasData && (
+      {(hasData && CState.slotData.length > 0 && CState.taken.length > 0 && (
         <div className="bg-white bg-opacity-95 h-full w-full">
           <div
             className="bg-yellow-500 flex items-center justify-center text-lg"
@@ -55,6 +55,10 @@ export function OLSlot() {
           <div>
             <SlotDetailsDisplay></SlotDetailsDisplay>
           </div>
+        </div>
+      )) || (
+        <div className="w-full h-full flex items-center justify-center">
+          Welcome to Canvas161!
         </div>
       )}
     </>
