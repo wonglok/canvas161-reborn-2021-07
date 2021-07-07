@@ -128,7 +128,9 @@ function SlotStatus() {
                 }}
                 className="bg-green-500 px-6 py-3 text-white rounded-full shadow-md drop-shadow-lg "
               >
-                Own this Tile
+                {getFire().auth().currentUser
+                  ? "Own this spot now!"
+                  : "Login and Own this Spot"}
               </button>
             )}
           </div>
