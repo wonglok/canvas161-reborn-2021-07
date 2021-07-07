@@ -20,8 +20,9 @@ import { useAutoEvent } from "../vfx-others/ENUitls";
 import { getFire, toArray } from "../vfx-others/ENFire";
 import router from "next/router";
 import { MeshBasicMaterial } from "three";
+import { HTMLSidebarEditor } from "./HTMLSidebarEditor";
 
-function getPanelHeight() {
+export function getPanelHeight() {
   let h = window.innerHeight * 0.25;
   if (h > 275) {
     h = 275;
@@ -244,7 +245,9 @@ function Slot({ value, resetToOrigin = false, onClickSlot = () => {} }) {
           <planeBufferGeometry args={[10, 10]}></planeBufferGeometry>
         </mesh>
 
-        <ObjectDisplayOfTile value={value}></ObjectDisplayOfTile>
+        {value.owner && value.owner.buildings && (
+          <ObjectDisplayOfTile value={value}></ObjectDisplayOfTile>
+        )}
 
         {/*  */}
         <Text position-y={1} rotation-x={Math.PI * -0.25} fontSize={1}>
@@ -369,32 +372,7 @@ function HTMLContent() {
     <>
       {CState.gameMode === "editor" && (
         <>
-          <div
-            className="absolute bottom-0 left-0 w-full bg-gray-300"
-            style={{ height: `${getPanelHeight()}px` }}
-          >
-            <div
-              className=" m-3 inline-flex items-center cursor-pointer"
-              onClick={() => {
-                //
-                CState.viewMode = "roomView";
-                CState.gameMode = "map";
-              }}
-            >
-              <svg
-                width="24"
-                height="24"
-                xmlns="http://www.w3.org/2000/svg"
-                fillRule="evenodd"
-                clipRule="evenodd"
-              >
-                <path d="M2.117 12l7.527 6.235-.644.765-9-7.521 9-7.479.645.764-7.529 6.236h21.884v1h-21.883z" />
-              </svg>
-              <div className="ml-3 inline-block">Back</div>
-            </div>
-
-            <div className="ml-3"></div>
-          </div>
+          <HTMLSidebarEditor></HTMLSidebarEditor>
         </>
       )}
 

@@ -69,6 +69,8 @@ export const obtainSlot = ({ mapID, slotID }) => {
             color: "#00ff00",
             useImage: false,
             image: "",
+
+            buildings: {},
           })
           .then(() => {
             CState.reload++;
