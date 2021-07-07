@@ -25,7 +25,7 @@ export const getCStateItems = () => {
 
     //
     overlay: ``,
-    currentMapID: false,
+    currentMapID: "first-gen",
     currentSlotID: false,
 
     taken: [],
@@ -36,6 +36,9 @@ export const getCStateItems = () => {
     movement: 0,
   };
 };
+
+export const OfficalListings = {};
+
 //
 
 export const CState = makeShallowStore(getCStateItems());

@@ -28,7 +28,7 @@ export function OLSlot() {
           </div>
 
           <div className="flex items-center mt-12 justify-center">
-            Cant find this slot. Let's explore other slots in 3 Seconds....
+            Cant find this slot. Will explore others in 3 Seconds....
           </div>
         </div>
       )}
@@ -80,6 +80,11 @@ function SlotDetailsDisplay() {
   return (
     <div>
       Slot Data Details
+      {/*  */}
+      <div>
+        Share link: https://canvas161.com/{CState.currentMapID}/
+        {CState.currentSlotID}
+      </div>
       <pre>{JSON.stringify(slotData, null, "  ")}</pre>
     </div>
   );

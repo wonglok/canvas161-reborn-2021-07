@@ -15,13 +15,20 @@ import { getFire, toArray } from "../vfx-others/ENFire";
 import router from "next/router";
 
 //
-export function C161({ mapID }) {
+export function C161({ mapID = "first-gen" }) {
   CState.currentMapID = mapID;
+
+  console.log(CState.currentMapID);
+
   return (
-    <div className="h-full w-full relative">
-      <WebGLCanvas></WebGLCanvas>
-      <HTMLContent></HTMLContent>
-    </div>
+    <>
+      {CState.currentMapID && (
+        <div className="h-full w-full relative">
+          <WebGLCanvas></WebGLCanvas>
+          <HTMLContent></HTMLContent>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -151,17 +158,14 @@ function Slot({ geometry, taken, value, onClickSlot = () => {} }) {
   );
 }
 
-function WebGLContent({ mapID }) {
+function WebGLContent() {
   const myGeometry = new CircleBufferGeometry(5, 32);
 
   CState.makeKeyReactive("slotData");
 
-  let firstMapID = `C161LandingMap`;
-
   useEffect(() => {
     if (router.query.slotID) {
       CState.currentSlotID = router.query.slotID;
-      CState.currentMapID = firstMapID;
       CState.overlay = "slot";
     }
   });
@@ -169,7 +173,7 @@ function WebGLContent({ mapID }) {
   useEffect(() => {
     getFire()
       .database()
-      .ref(`/maps/${firstMapID}/mapData`)
+      .ref(`/maps/${CState.currentMapID}/mapData`)
       .once("value", (snap) => {
         let v = snap.val();
         if (v) {
@@ -180,7 +184,7 @@ function WebGLContent({ mapID }) {
 
     let cleanSlotData = getFire()
       .database()
-      .ref(`/maps/${firstMapID}/slotData`)
+      .ref(`/maps/${CState.currentMapID}/slotData`)
       .on("value", (snap) => {
         if (snap) {
           let v = snap.val();
@@ -194,7 +198,7 @@ function WebGLContent({ mapID }) {
 
     let cleanTakenData = getFire()
       .database()
-      .ref(`/maps/${firstMapID}/taken`)
+      .ref(`/maps/${CState.currentMapID}/taken`)
       .on("value", (snap) => {
         if (snap) {
           let v = snap.val();
@@ -226,7 +230,6 @@ function WebGLContent({ mapID }) {
               onClickSlot={(ev) => {
                 //
                 //
-                CState.currentMapID = firstMapID;
                 CState.currentSlotID = ev.value._id;
                 CState.overlay = "slot";
 
