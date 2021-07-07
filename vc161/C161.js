@@ -106,6 +106,7 @@ function Slot({ geometry, taken, value, onClickSlot = () => {} }) {
           }}
           onPointerDown={(ev) => {
             CState.isDown = true;
+            CState.movement = 0;
             ev.object.material.color = downColor;
           }}
           onPointerUp={(ev) => {
@@ -121,6 +122,8 @@ function Slot({ geometry, taken, value, onClickSlot = () => {} }) {
             CState.movement++;
           }}
           onClick={(ev) => {
+            onClickSlot({ ...ev, value });
+
             // ev.object.material.color = downColor;
             // setTimeout(() => {
             //   ev.object.material.color = hoverColor;
