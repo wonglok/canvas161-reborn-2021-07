@@ -21,7 +21,7 @@ export function HTMLSidebarEditor() {
         let val = snap.val();
         if (val) {
           if (!val.buildings) {
-            return getOwnerRef().child("buildings").set([]);
+            return getOwnerRef().child("buildings").set({});
           } else {
             setBuildings(toArray(val.buildings));
             return Promise.resolve();
@@ -70,22 +70,27 @@ export function HTMLSidebarEditor() {
         <div className="h-full w-full flex overflow-scroll-x ">
           <div className="h-full overflow-scroll w-52">
             <div>
-              <div
-                className="w-10 h-10 cursor-pointer inline-flex items-center justify-center hover:bg-white"
-                onClick={() => {
-                  //
-                  let item = getOwnerRef().child("buildings").push();
-                  item.set({
-                    type: "blocker",
-                    draw: "mesh",
-                    geometry: "box",
-                    material: "default",
-                    wallTexture: ``,
-                  });
-                }}
-              >
-                +
-              </div>
+              {buildings.length <= 10 && (
+                <div
+                  className="w-10 h-10 cursor-pointer inline-flex items-center justify-center hover:bg-white"
+                  onClick={() => {
+                    //
+                    if (buildings.length <= 10) {
+                      let item = getOwnerRef().child("buildings").push();
+
+                      item.set({
+                        type: "blocker",
+                        draw: "mesh",
+                        geometry: "box",
+                        material: "default",
+                        wallTexture: ``,
+                      });
+                    }
+                  }}
+                >
+                  +
+                </div>
+              )}
 
               {buildings.map((e, i) => {
                 return (

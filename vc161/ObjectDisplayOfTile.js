@@ -87,14 +87,14 @@ function Blocker({ kv, geometries, onClicker }) {
           item.material.map = new TextureLoader().load(
             `${kv.value.wallTexture}`
           );
-        } else {
+        } else if (!item.material.map) {
           item.material.map = new TextureLoader().load(
             `${kv.value.wallTexture}`
           );
         }
       }
     }
-  }, [JSON.stringify(kv)]);
+  }, [JSON.stringify(kv), CState.refreshBuilding]);
 
   return (
     <mesh
