@@ -5,13 +5,13 @@ import { getGPUTier } from "detect-gpu";
 import { CState } from "./CState";
 import { HDRI } from "../vfx-library/HDRI";
 import { UIControls } from "./UIControls";
-import { Text } from "@react-three/drei";
+// import { Text } from "@react-three/drei";
 import {
-  BoxBufferGeometry,
-  BoxHelper,
+  // BoxBufferGeometry,
+  // BoxHelper,
   Color,
-  Mesh,
-  SphereGeometry,
+  // Mesh,
+  // SphereGeometry,
 } from "three";
 import { ObjectDisplayOfTile } from "./ObjectDisplayOfTile";
 // import { LoginChecker } from "./LoginChecker";
@@ -33,7 +33,6 @@ export function getPanelHeight() {
 //
 export function C161({ mapID = "first-gen" }) {
   CState.currentMapID = mapID;
-
   // console.log(CState.currentMapID);
 
   return (
@@ -52,9 +51,9 @@ function WebGLCanvas() {
   CState.makeKeyReactive("viewMode");
   CState.makeKeyReactive("gameMode");
 
-  CState.useReactiveKey("gameMode", () => {
-    window.dispatchEvent(new Event("resize"));
-  });
+  // CState.useReactiveKey("gameMode", () => {
+  //   window.dispatchEvent(new Event("resize"));
+  // });
 
   let ref = useRef();
   let [dpr, setDPR] = useState([1, 3]);
@@ -68,15 +67,15 @@ function WebGLCanvas() {
     <div
       ref={ref}
       className={"h-full w-full absolute top-0 right-0 "}
-      style={
-        CState.gameMode === "editor"
-          ? {
-              height: `calc(100% - ${getPanelHeight()}px)`,
-            }
-          : {
-              height: `calc(100% - 0px)`,
-            }
-      }
+      // style={
+      //   CState.gameMode === "editor"
+      //     ? {
+      //         height: `calc(100% - ${0.0 * getPanelHeight()}px)`,
+      //       }
+      //     : {
+      //         height: `calc(100% - 0px)`,
+      //       }
+      // }
     >
       <Canvas
         dpr={dpr}
@@ -107,11 +106,11 @@ function WebGLCanvas() {
         }}
       >
         <HDRI></HDRI>
-        {CState.gameMode === "map" && (
-          <group>
-            <GridContent></GridContent>
-          </group>
-        )}
+        {/* {CState.gameMode === "map" && ( */}
+        <group visible={CState.gameMode === "map"}>
+          <GridContent></GridContent>
+        </group>
+        {/* )} */}
         {CState.gameMode === "editor" && <Editor></Editor>}
 
         <UIControls></UIControls>
@@ -124,19 +123,20 @@ function Editor() {
   let [value, setValue] = useState(false);
 
   useEffect(() => {
-    //
-
-    return getFire()
-      .database()
-      .ref(`/maps/${CState.currentMapID}/slotData/${CState.currentSlotID}`)
-      .on("value", (snap) => {
-        if (snap) {
-          let val = snap.val();
-          if (val) {
-            setValue(val);
+    return (
+      //
+      getFire()
+        .database()
+        .ref(`/maps/${CState.currentMapID}/slotData/${CState.currentSlotID}`)
+        .on("value", (snap) => {
+          if (snap) {
+            let val = snap.val();
+            if (val) {
+              setValue(val);
+            }
           }
-        }
-      });
+        })
+    );
   }, []);
 
   return (

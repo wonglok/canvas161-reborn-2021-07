@@ -1,4 +1,4 @@
-import { Text } from "@react-three/drei";
+import { Detailed, Text } from "@react-three/drei";
 import { useMemo } from "react";
 import { Mesh } from "three";
 import { toArray } from "../vfx-others/ENFire";
@@ -22,20 +22,23 @@ export function ObjectDisplayOfTile({ value, onClicker = () => {} }) {
   let geometries = {
     //
     box: <boxBufferGeometry args={[1, 1, 1, 2, 2, 2]}></boxBufferGeometry>,
-    ball: <sphereBufferGeometry args={[0.5, 32, 32]}></sphereBufferGeometry>,
+    ball: <sphereBufferGeometry args={[0.5, 25, 25]}></sphereBufferGeometry>,
   };
 
   return (
     <group>
-      <Text
-        position-y={1}
-        position-z={3}
-        rotation-x={Math.PI * -0.25}
-        fontSize={1}
-      >
-        {/* {value._id} */}
-        {value.owner ? value?.owner?.userDisplayName || "" : value?._id || ""}
-      </Text>
+      <Detailed distances={[0, 80]}>
+        <Text
+          position-y={1}
+          position-z={3}
+          rotation-x={Math.PI * -0.25}
+          fontSize={1}
+        >
+          {/* {value._id} */}
+          {value.owner ? value?.owner?.userDisplayName || "" : value?._id || ""}
+        </Text>
+        <group></group>
+      </Detailed>
 
       {buildings.map((e, i) => {
         return (
