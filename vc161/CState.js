@@ -32,6 +32,8 @@ export const getCStateItems = () => {
     slotData: [],
     mapData: false,
     reload: 0,
+    isDown: false,
+    movement: 0,
   };
 };
 //

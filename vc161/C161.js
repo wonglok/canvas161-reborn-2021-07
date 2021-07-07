@@ -76,17 +76,15 @@ function Slot({ geometry, taken, value, onClickSlot = () => {} }) {
   let hoverColor = new Color("#888888");
   let readyColor = new Color(value.owner?.color || "#ffffff");
   let radius = 10;
-  let count = 0;
-  let isDown = false;
 
   useAutoEvent("touchmove", () => {
-    if (isDown) {
-      count++;
+    if (CState.isDown) {
+      CState.movement++;
     }
   });
   useAutoEvent("mousemove", () => {
-    if (isDown) {
-      count++;
+    if (CState.isDown) {
+      CState.movement++;
     }
   });
   return (
@@ -107,24 +105,26 @@ function Slot({ geometry, taken, value, onClickSlot = () => {} }) {
             ev.object.material.color = readyColor;
           }}
           onPointerDown={(ev) => {
-            isDown = true;
+            CState.isDown = true;
             ev.object.material.color = downColor;
           }}
           onPointerUp={(ev) => {
-            isDown = false;
             ev.object.material.color = readyColor;
 
-            if (count <= 10) {
+            if (CState.movement <= 20 && CState.isDown) {
               onClickSlot({ ...ev, value });
             }
-            count = 0;
+            CState.movement = 0;
+            CState.isDown = false;
+          }}
+          onPointerMove={() => {
+            CState.movement++;
           }}
           onClick={(ev) => {
-            ev.object.material.color = downColor;
-
-            setTimeout(() => {
-              ev.object.material.color = hoverColor;
-            }, 100);
+            // ev.object.material.color = downColor;
+            // setTimeout(() => {
+            //   ev.object.material.color = hoverColor;
+            // }, 100);
           }}
           geometry={geometry}
         >
