@@ -141,7 +141,7 @@ function Slot({ geometry, taken, value, onClickSlot = () => {} }) {
         position-z={value.y * radius - value.height * 0.5 * radius}
       >
         <mesh
-          scale={0.99}
+          scale={0.998}
           rotation-x={Math.PI * -0.5}
           onPointerEnter={(ev) => {
             document.body.style.cursor = `pointer`;
