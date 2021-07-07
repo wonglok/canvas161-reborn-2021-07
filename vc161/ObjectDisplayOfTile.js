@@ -4,7 +4,7 @@ import { Mesh } from "three";
 import { toArray } from "../vfx-others/ENFire";
 import { CState } from "./CState";
 
-export function ObjectDisplayOfTile({ value, onClicker }) {
+export function ObjectDisplayOfTile({ value, onClicker = () => {} }) {
   let buildingObj = value?.owner?.buildings || {};
 
   let buildings = toArray(buildingObj);

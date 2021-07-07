@@ -245,7 +245,14 @@ function Slot({ value, resetToOrigin = false, onClickSlot = () => {} }) {
           <planeBufferGeometry args={[10, 10]}></planeBufferGeometry>
         </mesh>
 
-        {<ObjectDisplayOfTile value={value}></ObjectDisplayOfTile>}
+        {
+          <ObjectDisplayOfTile
+            onClicker={(ev) => {
+              onClickSlot(ev);
+            }}
+            value={value}
+          ></ObjectDisplayOfTile>
+        }
       </group>
     </>
   );
