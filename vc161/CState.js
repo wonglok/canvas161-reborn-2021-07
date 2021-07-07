@@ -34,6 +34,8 @@ export const getCStateItems = () => {
     reload: 0,
     isDown: false,
     movement: 0,
+
+    gameMode: "map",
   };
 };
 

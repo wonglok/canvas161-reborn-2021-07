@@ -10,9 +10,16 @@ import { CState } from "./CState";
 export function UIControls() {
   return (
     <>
-      {CState.viewMode === "topView" && <TopView></TopView>}
-      {CState.viewMode === "roomView" && <RoomView></RoomView>}
-      {CState.viewMode === "orbitView" && <OribtView></OribtView>}
+      {CState.gameMode === "map" && (
+        <>
+          {CState.viewMode === "topView" && <TopView></TopView>}
+          {CState.viewMode === "roomView" && <RoomView></RoomView>}
+          {CState.viewMode === "orbitView" && <OribtView></OribtView>}
+        </>
+      )}
+      {CState.gameMode === "editor" && (
+        <>{CState.viewMode === "orbitView" && <OribtView></OribtView>}</>
+      )}
     </>
   );
 }

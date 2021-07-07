@@ -6,7 +6,7 @@ import { CState } from "./CState";
 import { HDRI } from "../vfx-library/HDRI";
 import { UIControls } from "./UIControls";
 import { Text } from "@react-three/drei";
-import { Color } from "three";
+import { BoxBufferGeometry, Color } from "three";
 import { CircleBufferGeometry } from "three";
 // import { LoginChecker } from "./LoginChecker";
 import { OLSlot } from "./OLSlot";
@@ -18,7 +18,7 @@ import router from "next/router";
 export function C161({ mapID = "first-gen" }) {
   CState.currentMapID = mapID;
 
-  console.log(CState.currentMapID);
+  // console.log(CState.currentMapID);
 
   return (
     <>
@@ -33,6 +33,7 @@ export function C161({ mapID = "first-gen" }) {
 }
 
 function WebGLCanvas() {
+  CState.makeKeyReactive("gameMode");
   let ref = useRef();
   let [dpr, setDPR] = useState([1, 3]);
 
@@ -72,7 +73,19 @@ function WebGLCanvas() {
         }}
       >
         <HDRI></HDRI>
-        <WebGLContent></WebGLContent>
+        {CState.gameMode === "map" && (
+          <group>
+            <WebGLContent></WebGLContent>
+          </group>
+        )}
+        {CState.gameMode === "main" && (
+          <group>
+            <mesh>
+              <boxBufferGeometry></boxBufferGeometry>
+              <sphereBufferGeometry></sphereBufferGeometry>
+            </mesh>
+          </group>
+        )}
       </Canvas>
     </div>
   );
@@ -104,7 +117,7 @@ function Slot({ geometry, taken, value, onClickSlot = () => {} }) {
         position-z={value.y * radius - value.height * 0.5 * radius}
       >
         <mesh
-          scale={0.95}
+          scale={0.99}
           rotation-x={Math.PI * -0.5}
           onPointerEnter={(ev) => {
             document.body.style.cursor = `pointer`;
@@ -159,7 +172,8 @@ function Slot({ geometry, taken, value, onClickSlot = () => {} }) {
 }
 
 function WebGLContent() {
-  const myGeometry = new CircleBufferGeometry(5, 32);
+  const myGeometry = new BoxBufferGeometry(10, 1, 10, 2, 2, 2);
+  myGeometry.rotateX(Math.PI * -0.5);
 
   CState.makeKeyReactive("slotData");
   CState.makeKeyReactive("taken");
@@ -254,6 +268,7 @@ function HTMLContent() {
   //
   CState.makeKeyReactive("overlay");
   CState.makeKeyReactive("slotData");
+  CState.makeKeyReactive("taken");
 
   useAutoEvent("keydown", (ev) => {
     if (ev.key.toLowerCase() === "escape") {

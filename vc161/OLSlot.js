@@ -73,9 +73,9 @@ function SlotDetailsDisplay() {
 
   return (
     <div>
-      Slot Data Details
+      {/* Slot Data Details
       {/*  */}
-      <div>
+      {/* <div>
         Share link:{" "}
         <a
           className="text-blue-500 underline"
@@ -85,75 +85,132 @@ function SlotDetailsDisplay() {
           https://canvas161.com/{CState.currentMapID}/{CState.currentSlotID}
         </a>
       </div>
-      <pre>{JSON.stringify(slotData, null, "  ")}</pre>
+      <pre>{JSON.stringify(slotData, null, "  ")}</pre> */}
     </div>
   );
 }
 
 function SlotStatus() {
   CState.makeKeyReactive("taken");
+  CState.makeKeyReactive("reload");
+  CState.makeKeyReactive("overlay");
+  CState.makeKeyReactive("slotData");
 
-  let [show, setShow] = useState(false);
+  let [ownerData, setShow] = useState(false);
+  let [isBoughtBy, setBoughtBy] = useState("none");
+  let [user, setUser] = useState(false);
   useEffect(() => {
     getFire()
       .database()
       .ref(`/maps/${CState.currentMapID}/slotData/${CState.currentSlotID}`)
       .once("value", (snap) => {
         if (snap) {
-          let val = snap.val();
-          if (val) {
-            setShow(true);
+          let usr = getFire().auth().currentUser;
+          if (usr) {
+            setUser(usr);
           } else {
-            setShow(true);
+            setUser(false);
           }
+
+          let val = snap.val();
+          if (val && val.owner) {
+            if (val.owner.ownerUID === usr?.uid) {
+              setBoughtBy("yourself");
+            } else {
+              setBoughtBy("others");
+            }
+          } else {
+            setBoughtBy("none");
+          }
+
+          setShow(val);
         }
       });
   }, []);
 
-  let hasData = CState.slotData.find((e) => e.key === CState.currentSlotID);
-  let isBought = CState.taken.find((e) => e.key === CState.currentSlotID);
+  // let hasData = CState.slotData.find((e) => e.key === CState.currentSlotID);
+  // let isBoughtBy = CState.taken.find((e) => e.key === CState.currentSlotID);
 
   return (
     <>
-      {show && hasData && (
+      {ownerData && (
         <div className="text-lg text-center p-3">
-          <div className="mb-3">
-            Slot {CState.currentSlotID.split("_").join("-")} is{" "}
-            {isBought ? "taken" : "ready to be taken"}
-          </div>
-          <div>
-            {!isBought && (
-              <button
-                onClick={() => {
-                  //
+          {isBoughtBy === "yourself" && (
+            <div>
+              <div>
+                Congratulations {user?.displayName}! You now own the Slot at [
+                {CState.currentSlotID}].
+              </div>
 
-                  if (getFire().auth().currentUser) {
-                    obtainSlot({
-                      mapID: CState.currentMapID,
-                      slotID: CState.currentSlotID,
-                    }).then(() => {});
-                  } else {
-                    loginGoogle().then(() => {
+              <div>
+                <button
+                  onClick={() => {
+                    //
+                    CState.overlay = "";
+                    CState.viewMode = "orbitView";
+                    CState.gameMode = "editor";
+                  }}
+                  className="bg-green-500 px-6 my-3 py-3 text-white rounded-full shadow-md drop-shadow-lg "
+                >
+                  Edit this Land
+                </button>
+              </div>
+            </div>
+          )}
+          {isBoughtBy === "others" && (
+            <div>
+              Slot [{CState.currentSlotID}] is owned by{" "}
+              {ownerData?.owner?.userDisplayName || "others."}
+            </div>
+          )}
+          {isBoughtBy === "none" && (
+            <div>
+              {user ? (
+                <button
+                  onClick={() => {
+                    if (user) {
                       obtainSlot({
                         mapID: CState.currentMapID,
                         slotID: CState.currentSlotID,
-                      }).then(() => {});
-                    });
-                  }
+                      }).then(() => {
+                        CState.reload++;
+                      });
+                    }
 
-                  //
-                }}
-                className="bg-green-500 px-6 py-3 text-white rounded-full shadow-md drop-shadow-lg "
-              >
-                {getFire().auth().currentUser
-                  ? "Own this spot now!"
-                  : "Login and Own this Spot"}
-              </button>
-            )}
-          </div>
+                    //
+                  }}
+                  className="bg-green-500 px-6 my-3 py-3 text-white rounded-full shadow-md drop-shadow-lg "
+                >
+                  Own This Land
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    if (!user) {
+                      loginGoogle().then(() => {
+                        CState.reload++;
+
+                        obtainSlot({
+                          mapID: CState.currentMapID,
+                          slotID: CState.currentSlotID,
+                        }).then(() => {
+                          CState.reload++;
+                        });
+                      });
+                    }
+
+                    //
+                  }}
+                  className="bg-green-500 px-6 my-3 py-3 text-white rounded-full shadow-md drop-shadow-lg "
+                >
+                  Login and Own this Land
+                </button>
+              )}
+            </div>
+          )}
         </div>
       )}
-      {!hasData && <div>No Such Slot</div>}
+      {!ownerData && <div></div>}
     </>
   );
 }
