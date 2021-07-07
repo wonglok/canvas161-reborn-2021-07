@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getFire, loginGoogle } from "../vfx-others/ENFire";
 // import { CState } from "./CState";
 
-export function LoginChecker({ children }) {
+export function LoginChecker({ children, fallback }) {
   // profile
 
   let [mode, setMode] = useState("loading");

@@ -8,12 +8,15 @@ import { UIControls } from "./UIControls";
 import { Text } from "@react-three/drei";
 import { Color } from "three";
 import { CircleBufferGeometry } from "three";
-import { LoginChecker } from "./LoginChecker";
+// import { LoginChecker } from "./LoginChecker";
 import { OLSlot } from "./OLSlot";
 import { useAutoEvent } from "../vfx-others/ENUitls";
 import { getFire, toArray } from "../vfx-others/ENFire";
+import router from "next/router";
 
-export function C161() {
+//
+export function C161({ mapID }) {
+  CState.currentMapID = mapID;
   return (
     <div className="h-full w-full relative">
       <WebGLCanvas></WebGLCanvas>
@@ -148,12 +151,20 @@ function Slot({ geometry, taken, value, onClickSlot = () => {} }) {
   );
 }
 
-function WebGLContent() {
+function WebGLContent({ mapID }) {
   const myGeometry = new CircleBufferGeometry(5, 32);
 
   CState.makeKeyReactive("slotData");
 
   let firstMapID = `C161LandingMap`;
+
+  useEffect(() => {
+    if (router.query.slotID) {
+      CState.currentSlotID = router.query.slotID;
+      CState.currentMapID = firstMapID;
+      CState.overlay = "slot";
+    }
+  });
 
   useEffect(() => {
     getFire()
@@ -258,9 +269,8 @@ function HTMLContent() {
       {CState.overlay === "slot" && (
         <>
           <div className="h-full w-full absolute top-0 left-0">
-            <LoginChecker>
-              <OLSlot></OLSlot>
-            </LoginChecker>
+            <OLSlot></OLSlot>
+            {/* <LoginChecker></LoginChecker> */}
           </div>
           <div
             style={{ height: "56px" }}
