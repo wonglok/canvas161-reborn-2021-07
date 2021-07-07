@@ -91,6 +91,7 @@ function SlotDetailsDisplay() {
 }
 
 function SlotStatus() {
+  CState.makeKeyReactive("slotData");
   CState.makeKeyReactive("taken");
 
   let hasData = CState.slotData.find((e) => e.key === CState.currentSlotID);
@@ -140,3 +141,5 @@ function SlotStatus() {
     </>
   );
 }
+
+//

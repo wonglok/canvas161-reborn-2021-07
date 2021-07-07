@@ -162,13 +162,7 @@ function WebGLContent() {
   const myGeometry = new CircleBufferGeometry(5, 32);
 
   CState.makeKeyReactive("slotData");
-
-  useEffect(() => {
-    if (router.query.slotID) {
-      CState.currentSlotID = router.query.slotID;
-      CState.overlay = "slot";
-    }
-  }, [router.query.slotID]);
+  CState.makeKeyReactive("taken");
 
   useEffect(() => {
     getFire()
@@ -266,6 +260,13 @@ function HTMLContent() {
       CState.overlay = "ready";
     }
   });
+
+  useEffect(() => {
+    if (router.query.slotID && CState.slotData.length > 0) {
+      CState.currentSlotID = router.query.slotID;
+      CState.overlay = "slot";
+    }
+  }, [router.query.slotID, CState.slotData]);
 
   //
   return (
