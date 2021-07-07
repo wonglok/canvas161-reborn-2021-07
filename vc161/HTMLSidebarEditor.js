@@ -219,13 +219,41 @@ function GalleryOneItem({ data = {}, onPick = () => {} }) {
   //
 
   return (
-    <div
-      onClick={() => {
-        onPick({ data });
-      }}
-      className="inline-block hover:bg-yellow-300 cursor-pointer  p-2 m-2 "
-    >
+    <div className="inline-block hover:bg-yellow-300 cursor-pointer  p-2 m-2 ">
       <img className="h-32 w-32 object-contain" src={data.itemURL} />
+
+      <div
+        onClick={() => {
+          onPick({ data });
+        }}
+        className="m-1 mt-2 p-1 px-3 rounded-full text-sm inline-flex items-center justify-center bg-white hover:bg-yellow-500"
+      >
+        Pick
+      </div>
+
+      <div
+        onClick={() => {
+          //
+          if (window.confirm("remove image?")) {
+            //
+            //
+
+            let uid = getFire().auth().currentUser?.uid;
+            if (uid) {
+              let fireRef = getFire().storage().ref(`/buildings/${uid}/`);
+              fireRef
+                .child(data.key)
+                .delete()
+                .then(() => {
+                  CState.refreshGallery++;
+                });
+            }
+          }
+        }}
+        className="m-1 mt-2 p-1 px-3 rounded-full text-sm inline-flex items-center justify-center bg-red-100 hover:bg-red-500"
+      >
+        Remove
+      </div>
     </div>
   );
 }

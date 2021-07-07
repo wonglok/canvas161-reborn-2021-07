@@ -109,6 +109,7 @@ function Blocker({ kv, geometries, onClicker }) {
       onPointerDown={() => {
         isDown = true;
       }}
+      //
       onPointerUp={(ev) => {
         if (CState.movement <= 10 && isDown) {
           onClicker(ev);
