@@ -245,15 +245,7 @@ function Slot({ value, resetToOrigin = false, onClickSlot = () => {} }) {
           <planeBufferGeometry args={[10, 10]}></planeBufferGeometry>
         </mesh>
 
-        {value.owner && value.owner.buildings && (
-          <ObjectDisplayOfTile value={value}></ObjectDisplayOfTile>
-        )}
-
-        {/*  */}
-        <Text position-y={1} rotation-x={Math.PI * -0.25} fontSize={1}>
-          {/* {value._id} */}
-          {value.owner ? value?.owner?.userDisplayName || "" : value?._id || ""}
-        </Text>
+        {<ObjectDisplayOfTile value={value}></ObjectDisplayOfTile>}
       </group>
     </>
   );

@@ -1,3 +1,4 @@
+import { Text } from "@react-three/drei";
 import { useMemo } from "react";
 import { Mesh } from "three";
 import { toArray } from "../vfx-others/ENFire";
@@ -26,6 +27,16 @@ export function ObjectDisplayOfTile({ value, onClicker }) {
 
   return (
     <group>
+      <Text
+        position-y={1}
+        position-z={3}
+        rotation-x={Math.PI * -0.25}
+        fontSize={1}
+      >
+        {/* {value._id} */}
+        {value.owner ? value?.owner?.userDisplayName || "" : value?._id || ""}
+      </Text>
+
       {buildings.map((e, i) => {
         return (
           <group key={e.key} position-y={0.5 + 1 * i}>
