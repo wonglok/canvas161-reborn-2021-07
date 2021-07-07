@@ -150,9 +150,9 @@ function SlotStatus() {
                     CState.viewMode = "buildingView";
                     CState.gameMode = "editor";
                   }}
-                  className="bg-green-500 px-6 my-3 py-3 text-white rounded-full shadow-md drop-shadow-lg "
+                  className="bg-indigo-500 px-6 my-3 py-3 text-white rounded-full shadow-md drop-shadow-lg "
                 >
-                  Edit this Land
+                  Edit My Land
                 </button>
               </div>
             </div>

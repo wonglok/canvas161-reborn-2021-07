@@ -1,4 +1,4 @@
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { InteractionUI } from "../vfx-library/InteractionUI";
 import { getGPUTier } from "detect-gpu";
@@ -98,25 +98,52 @@ function Editor() {
   let ref = useRef();
   useEffect(() => {
     if (ref.current) {
-      const sphere = new BoxBufferGeometry(10, 10, 10);
-      const object = new Mesh(sphere, new MeshBasicMaterial(0xff0000));
+      const myGeo = new BoxBufferGeometry(10, 10, 10);
+      myGeo.translate(0, 5, 0);
+      const object = new Mesh(myGeo, new MeshBasicMaterial(0xff0000));
       const box = new BoxHelper(object, 0x000000);
       ref.current.add(box);
+      return () => {
+        if (ref.current) {
+          ref.current.remove(box);
+        }
+      };
     }
+  }, []);
+
+  let [value, setValue] = useState(false);
+
+  useEffect(() => {
+    //
+
+    return getFire()
+      .database()
+      .ref(`/maps/${CState.currentMapID}/slotData/${CState.currentSlotID}`)
+      .on("value", (snap) => {
+        //
+
+        if (snap) {
+          let val = snap.val();
+          if (val) {
+            setValue(val);
+            console.log(val);
+          }
+        }
+      });
   }, []);
 
   return (
     <group ref={ref}>
-      <mesh>
+      {/* <mesh>
         <meshStandardMaterial color={"#ff0000"}></meshStandardMaterial>
         <sphereBufferGeometry args={[5, 32, 32]}></sphereBufferGeometry>
-      </mesh>
+      </mesh> */}
+      {value && <Slot resetToOrigin={true} value={value}></Slot>}
     </group>
   );
 }
 
-function Slot({ geometry, taken, value, onClickSlot = () => {} }) {
-  //
+function Slot({ value, resetToOrigin = false, onClickSlot = () => {} }) {
   CState.makeKeyReactive("taken");
 
   let downColor = new Color("#bababa");
@@ -134,11 +161,18 @@ function Slot({ geometry, taken, value, onClickSlot = () => {} }) {
       CState.movement++;
     }
   });
+  let resetToOriginFactor = resetToOrigin ? 0.0 : 1.0;
   return (
     <>
       <group
-        position-x={value.x * radius - value.width * 0.5 * radius}
-        position-z={value.y * radius - value.height * 0.5 * radius}
+        position-x={
+          resetToOriginFactor * value.x * radius -
+          resetToOriginFactor * value.width * 0.5 * radius
+        }
+        position-z={
+          resetToOriginFactor * value.y * radius -
+          resetToOriginFactor * value.height * 0.5 * radius
+        }
       >
         <mesh
           scale={0.998}
@@ -176,13 +210,13 @@ function Slot({ geometry, taken, value, onClickSlot = () => {} }) {
             //   ev.object.material.color = hoverColor;
             // }, 100);
           }}
-          geometry={geometry}
         >
           <meshStandardMaterial
             roughness={0.8}
             metalness={1}
-            color={value.owner?.color || "#ffffff"}
+            color={value?.owner?.color || "#ffffff"}
           ></meshStandardMaterial>
+          <planeBufferGeometry args={[10, 10]}></planeBufferGeometry>
         </mesh>
 
         {/*  */}
@@ -196,9 +230,6 @@ function Slot({ geometry, taken, value, onClickSlot = () => {} }) {
 }
 
 function GridContent() {
-  const myGeometry = new BoxBufferGeometry(10, 1, 10, 2, 2, 2);
-  myGeometry.rotateX(Math.PI * -0.5);
-
   CState.makeKeyReactive("slotData");
   CState.makeKeyReactive("taken");
 
@@ -267,7 +298,6 @@ function GridContent() {
 
                 //
               }}
-              geometry={myGeometry}
             ></Slot>
           </group>
         );
