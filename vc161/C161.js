@@ -383,6 +383,7 @@ function HTMLContent() {
               className="cursor-pointer"
               onClick={() => {
                 //
+                CState.viewMode = "roomView";
                 CState.gameMode = "map";
               }}
             >
