@@ -43,6 +43,7 @@ export const getCStateItems = () => {
     gameMode: "map",
 
     refreshBuilding: 0,
+    refreshGallery: 0,
     panel: ``,
 
     esc: [],

@@ -181,6 +181,8 @@ function Gallery({ onPick = () => {} }) {
 
 function GalleryItems({ onPick = () => {} }) {
   //
+  CState.makeKeyReactive("refreshGallery");
+
   let [gallery, setGallery] = useState([]);
   useEffect(() => {
     let uid = getFire().auth().currentUser?.uid;
@@ -200,7 +202,8 @@ function GalleryItems({ onPick = () => {} }) {
         });
       });
     }
-  }, []);
+  }, [CState.refreshGallery]);
+
   return (
     <div>
       {gallery.map((e) => {
