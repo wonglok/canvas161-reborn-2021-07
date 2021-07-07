@@ -94,7 +94,7 @@ function BuildingView() {
         fov={45}
         makeDefault
       ></PerspectiveCamera>
-      <MapControls
+      {/* <MapControls
         ref={controls}
         enableRotate={false}
         panSpeed={1.5}
@@ -102,7 +102,14 @@ function BuildingView() {
         enabled={true}
         maxDistance={250}
         minDistance={30}
-      ></MapControls>
+      ></MapControls> */}
+
+      <OrbitControls
+        ref={controls}
+        dampingFactor={0.05}
+        enabled={true}
+        panSpeed={1.5}
+      ></OrbitControls>
     </group>
   );
 }

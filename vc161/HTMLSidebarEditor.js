@@ -76,14 +76,29 @@ export function HTMLSidebarEditor() {
               });
             }}
           >
-            Add Building
+            Add Ball Building
+          </button>
+
+          {/*  */}
+          <button
+            onClick={() => {
+              let item = getOwnerRef().child("buildings").push();
+              item.set({
+                type: "blocker",
+                draw: "mesh",
+                geometry: "box",
+                material: "default",
+              });
+            }}
+          >
+            Add Box Building
           </button>
         </div>
       </div>
 
-      <pre className=" absolute top-0 right-0 pointer-events-none">
+      {/* <pre className=" absolute top-0 right-0 pointer-events-none">
         {JSON.stringify(buildings, null, "  ")}
-      </pre>
+      </pre> */}
     </>
   );
 }

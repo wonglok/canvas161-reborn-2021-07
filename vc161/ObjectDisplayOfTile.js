@@ -10,11 +10,17 @@ export function ObjectDisplayOfTile({ value, onClicker }) {
 
   let materials = {
     //
-    default: <meshStandardMaterial color={"#ff0000"}></meshStandardMaterial>,
+    default: (
+      <meshStandardMaterial
+        metalness={0.8}
+        roughness={0.1}
+        color={"#ffffff"}
+      ></meshStandardMaterial>
+    ),
   };
   let geometries = {
     //
-    box: <boxBufferGeometry args={[10, 1, 10, 2, 2, 2]}></boxBufferGeometry>,
+    box: <boxBufferGeometry args={[1, 1, 1, 2, 2, 2]}></boxBufferGeometry>,
     ball: <sphereBufferGeometry args={[0.5, 32, 32]}></sphereBufferGeometry>,
   };
 
