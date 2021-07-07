@@ -22,7 +22,7 @@ export function OLSlot() {
           </div>
         </div>
       )}
-      {(hasData && CState.slotData.length > 0 && CState.taken.length > 0 && (
+      {(hasData && CState.slotData.length > 0 && (
         <div className="bg-white bg-opacity-95 h-full w-full">
           <div
             className="bg-yellow-500 flex items-center justify-center text-lg"
@@ -76,8 +76,14 @@ function SlotDetailsDisplay() {
       Slot Data Details
       {/*  */}
       <div>
-        Share link: https://canvas161.com/{CState.currentMapID}/
-        {CState.currentSlotID}
+        Share link:{" "}
+        <a
+          className="text-blue-500 underline"
+          target="_blank"
+          href={`https://canvas161.com/${CState.currentMapID}/${CState.currentSlotID}`}
+        >
+          https://canvas161.com/{CState.currentMapID}/{CState.currentSlotID}
+        </a>
       </div>
       <pre>{JSON.stringify(slotData, null, "  ")}</pre>
     </div>

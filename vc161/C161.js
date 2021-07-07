@@ -168,7 +168,7 @@ function WebGLContent() {
       CState.currentSlotID = router.query.slotID;
       CState.overlay = "slot";
     }
-  });
+  }, [router.query.slotID]);
 
   useEffect(() => {
     getFire()
@@ -273,7 +273,7 @@ function HTMLContent() {
       {CState.overlay === "slot" && (
         <>
           <div className="h-full w-full absolute top-0 left-0">
-            {CState.slotData.length !== 0 && <OLSlot></OLSlot>}
+            {CState.slotData.length > 0 && <OLSlot></OLSlot>}
             {/* <LoginChecker></LoginChecker> */}
           </div>
           <div
