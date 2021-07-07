@@ -21,6 +21,14 @@ import { getFire, toArray } from "../vfx-others/ENFire";
 import router from "next/router";
 import { MeshBasicMaterial } from "three";
 
+function getPanelHeight() {
+  let h = window.innerHeight * 0.25;
+  if (h > 275) {
+    h = 275;
+  }
+  return h;
+}
+
 //
 export function C161({ mapID = "first-gen" }) {
   CState.currentMapID = mapID;
@@ -62,10 +70,10 @@ function WebGLCanvas() {
       style={
         CState.gameMode === "editor"
           ? {
-              width: `calc(100% - 275px)`,
+              height: `calc(100% - ${getPanelHeight()}px)`,
             }
           : {
-              width: `calc(100% - 0px)`,
+              height: `calc(100% - 0px)`,
             }
       }
     >
@@ -362,38 +370,35 @@ function HTMLContent() {
       {CState.gameMode === "editor" && (
         <>
           <div
-            className="absolute top-0 left-0 h-full bg-gray-300"
-            style={{ width: `275px` }}
+            className="absolute bottom-0 left-0 w-full bg-gray-300"
+            style={{ height: `${getPanelHeight()}px` }}
           >
-            <br />
-            <br />
-            <div className="ml-3">Sidebar Stuff</div>
-            <div className="ml-3"></div>
-          </div>
-        </>
-      )}
-
-      {CState.gameMode === "editor" && (
-        <>
-          <div className="absolute top-0 left-0 m-3 ">
-            <svg
-              width="24"
-              height="24"
-              xmlns="http://www.w3.org/2000/svg"
-              fillRule="evenodd"
-              clipRule="evenodd"
-              className="cursor-pointer"
+            <div
+              className=" m-3 inline-flex items-center cursor-pointer"
               onClick={() => {
                 //
                 CState.viewMode = "roomView";
                 CState.gameMode = "map";
               }}
             >
-              <path d="M2.117 12l7.527 6.235-.644.765-9-7.521 9-7.479.645.764-7.529 6.236h21.884v1h-21.883z" />
-            </svg>
+              <svg
+                width="24"
+                height="24"
+                xmlns="http://www.w3.org/2000/svg"
+                fillRule="evenodd"
+                clipRule="evenodd"
+              >
+                <path d="M2.117 12l7.527 6.235-.644.765-9-7.521 9-7.479.645.764-7.529 6.236h21.884v1h-21.883z" />
+              </svg>
+              <div className="ml-3 inline-block">Back</div>
+            </div>
+
+            <div className="ml-3"></div>
           </div>
         </>
       )}
+
+      {CState.gameMode === "editor" && <></>}
 
       {CState.overlay === "slot" && (
         <>
