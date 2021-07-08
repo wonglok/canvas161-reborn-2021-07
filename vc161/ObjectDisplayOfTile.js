@@ -51,7 +51,7 @@ export function ObjectDisplayOfTile({ value, onClicker = () => {} }) {
             <Suspense fallback={null}>
               <Blocker
                 onClicker={(ev) => {
-                  onClicker({ ...ev, value });
+                  onClicker({ ...ev, value, buildingKey: e.key });
                 }}
                 geometries={geometries}
                 kv={e}
@@ -105,7 +105,11 @@ function Blocker({ kv, geometries, onClicker }) {
     let item = refBlocker.current;
     if (item) {
       if (kv?.value?.wallTexture) {
-        if (CState.refreshBuilding === kv.key) {
+        if (CState.refreshBuilding) {
+          if (item.material.map?.image?.src === kv.value.wallTexture) {
+            return;
+          }
+
           item.material.map = new TextureLoader().load(
             `${kv.value.wallTexture}`,
             () => {},

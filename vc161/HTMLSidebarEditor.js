@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { getFire, toArray } from "../vfx-others/ENFire";
 import { getID } from "../vfx-others/ENUitls";
 import { getPanelHeight } from "./C161";
-import { CState } from "./CState";
+import { CState, onOpenTextureChooser } from "./CState";
 
 export function HTMLSidebarEditor() {
   CState.makeKeyReactive("panel");
@@ -111,31 +111,7 @@ export function HTMLSidebarEditor() {
                     className="w-10 h-10 cursor-pointer inline-flex items-center justify-center hover:bg-white"
                     onClick={() => {
                       //
-                      CState.onPickGallery = ({ data }) => {
-                        //
-
-                        getOwnerRef()
-                          .child("buildings")
-                          .child(e.key)
-                          .child("wallTexture")
-                          .set(data.itemURL)
-                          .then(() => {
-                            console.log("wallpaper set");
-                            CState.refreshBuilding = e.key;
-                          });
-
-                        //
-                        // console.log(data);
-                        //
-
-                        //
-                        //
-                        //
-
-                        CState.onPickGallery = () => {};
-                        CState.panel = "";
-                      };
-                      CState.panel = "gallery";
+                      onOpenTextureChooser({ buildingKey: e.key });
                     }}
                   >
                     {i === 0 ? "G" : i} {/*  */}

@@ -98,3 +98,35 @@ export const obtainSlot = ({ mapID, slotID }) => {
 //                 CState.overlay = "slot";
 
 export function uploadFileToUser() {}
+
+export function onOpenTextureChooser({ buildingKey }) {
+  CState.onPickGallery = ({ data }) => {
+    //
+
+    getFire()
+      .database()
+      .ref(
+        `/maps/${CState.currentMapID}/slotData/${CState.currentSlotID}/owner`
+      )
+      .child("buildings")
+      .child(buildingKey)
+      .child("wallTexture")
+      .set(data.itemURL)
+      .then(() => {
+        console.log("wallpaper set");
+        CState.refreshBuilding++;
+      });
+
+    //
+    // console.log(data);
+    //
+
+    //
+    //
+    //
+
+    CState.onPickGallery = () => {};
+    CState.panel = "";
+  };
+  CState.panel = "gallery";
+}

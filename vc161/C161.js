@@ -2,7 +2,7 @@ import { Canvas, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { InteractionUI } from "../vfx-library/InteractionUI";
 import { getGPUTier } from "detect-gpu";
-import { CState } from "./CState";
+import { CState, onOpenTextureChooser } from "./CState";
 import { HDRI } from "../vfx-library/HDRI";
 import { UIControls } from "./UIControls";
 // import { Text } from "@react-three/drei";
@@ -117,7 +117,7 @@ function WebGLCanvas() {
           <GridContent></GridContent>
         </group>
         {/* )} */}
-        {CState.gameMode === "editor" && <Editor></Editor>}
+        {CState.gameMode === "editor" && <GLEditor></GLEditor>}
 
         <UIControls></UIControls>
       </Canvas>
@@ -125,7 +125,7 @@ function WebGLCanvas() {
   );
 }
 
-function Editor() {
+function GLEditor() {
   let [value, setValue] = useState(false);
 
   useEffect(() => {
@@ -148,11 +148,29 @@ function Editor() {
   }, []);
 
   return (
-    <group>{value && <Slot resetToOrigin={true} value={value}></Slot>}</group>
+    <group>
+      {value && (
+        <Slot
+          onClickDuringEditMode={(ev) => {
+            console.log(ev.buildingKey);
+            if (ev.buildingKey) {
+              onOpenTextureChooser({ buildingKey: ev.buildingKey });
+            }
+          }}
+          resetToOrigin={true}
+          value={value}
+        ></Slot>
+      )}
+    </group>
   );
 }
 
-function Slot({ value, resetToOrigin = false, onClickSlot = () => {} }) {
+function Slot({
+  value,
+  resetToOrigin = false,
+  onClickDuringEditMode = () => {},
+  onClickSlot = () => {},
+}) {
   CState.makeKeyReactive("taken");
 
   let downColor = new Color("#bababa");
@@ -241,6 +259,12 @@ function Slot({ value, resetToOrigin = false, onClickSlot = () => {} }) {
           <ObjectDisplayOfTile
             onClicker={(ev) => {
               onClickSlot(ev);
+
+              if (CState.gameMode === "editor") {
+                //
+                //
+                onClickDuringEditMode(ev);
+              }
             }}
             value={value}
           ></ObjectDisplayOfTile>
