@@ -6,7 +6,8 @@ import { CState, onOpenTextureChooser } from "./CState";
 
 export function HTMLSidebarEditor() {
   CState.makeKeyReactive("panel");
-  CState.makeKeyReactive("onPickGallery");
+  // CState.makeKeyReactive("onPickGallery");
+  CState.makeKeyReactive("refreshGallery");
 
   let [buildings, setBuildings] = useState([]);
 
@@ -28,7 +29,12 @@ export function HTMLSidebarEditor() {
         let val = snap.val();
         if (val) {
           if (!val.buildings) {
-            return getOwnerRef().child("buildings").set({});
+            return getOwnerRef()
+              .child("buildings")
+              .set({})
+              .then(() => {
+                CState.refreshGallery++;
+              });
           } else {
             setBuildings(toArray(val.buildings));
             return () => {};

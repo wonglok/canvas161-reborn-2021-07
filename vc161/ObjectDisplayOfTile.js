@@ -15,12 +15,12 @@ export function ObjectDisplayOfTile({ value, onClicker = () => {} }) {
     //
     box: (
       <boxBufferGeometry
-        args={[aroundWidth, levelHeight, aroundWidth, 2, 2, 2]}
+        args={[aroundWidth, levelHeight, levelHeight, 2, 2, 2]}
       ></boxBufferGeometry>
     ),
     ball: (
       <boxBufferGeometry
-        args={[aroundWidth, levelHeight, aroundWidth, 2, 2, 2]}
+        args={[aroundWidth, levelHeight, levelHeight, 2, 2, 2]}
       ></boxBufferGeometry>
     ),
   };
@@ -53,6 +53,7 @@ export function ObjectDisplayOfTile({ value, onClicker = () => {} }) {
                 onClicker={(ev) => {
                   onClicker({ ...ev, value, buildingKey: e.key });
                 }}
+                value={value}
                 geometries={geometries}
                 kv={e}
               ></Blocker>
@@ -63,7 +64,7 @@ export function ObjectDisplayOfTile({ value, onClicker = () => {} }) {
     </group>
   );
 }
-function Blocker({ kv, geometries, onClicker }) {
+function Blocker({ kv, value, geometries, onClicker }) {
   CState.makeKeyReactive("refreshBuilding");
 
   //
@@ -123,7 +124,7 @@ function Blocker({ kv, geometries, onClicker }) {
         }
       }
     }
-  }, [CState.refreshBuilding]);
+  }, [CState.refreshBuilding, value]);
 
   return (
     <mesh
@@ -131,10 +132,22 @@ function Blocker({ kv, geometries, onClicker }) {
       onPointerDown={() => {
         isDown = true;
       }}
+      onPointerEnter={() => {
+        if (CState.gameMode === "editor") {
+          document.body.style.cursor = "pointer";
+        }
+      }}
+      onPointerLeave={() => {
+        if (CState.gameMode === "editor") {
+          document.body.style.cursor = "";
+        }
+      }}
       //
       onPointerUp={(ev) => {
-        if (CState.movement <= 10 && isDown) {
-          onClicker(ev);
+        if (CState.gameMode === "editor") {
+          if (CState.movement <= 10 && isDown) {
+            onClicker(ev);
+          }
         }
       }}
     >

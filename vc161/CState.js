@@ -125,8 +125,8 @@ export function onOpenTextureChooser({ buildingKey }) {
     //
     //
 
-    CState.onPickGallery = () => {};
     CState.panel = "";
+    CState.onPickGallery = () => {};
   };
   CState.panel = "gallery";
 }

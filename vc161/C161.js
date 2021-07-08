@@ -152,7 +152,6 @@ function GLEditor() {
       {value && (
         <Slot
           onClickDuringEditMode={(ev) => {
-            console.log(ev.buildingKey);
             if (ev.buildingKey) {
               onOpenTextureChooser({ buildingKey: ev.buildingKey });
             }

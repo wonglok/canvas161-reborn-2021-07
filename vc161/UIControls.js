@@ -67,7 +67,7 @@ function RoomView() {
         dampingFactor={0.05}
         enabled={true}
         minDistance={30}
-        maxDistance={800}
+        maxDistance={150}
       ></MapControls>
     </group>
   );
