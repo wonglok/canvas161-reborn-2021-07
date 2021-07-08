@@ -39,7 +39,7 @@ export function ObjectDisplayOfTile({ value, onClicker = () => {} }) {
             ? value?.owner?.buildingText || value?.owner?.userDisplayName
             : value?._id || ""}
         </Text>
-        <group></group>
+        <group>{/* placeholder to hide item */}</group>
       </Detailed>
 
       {buildings.map((e, i) => {
@@ -85,7 +85,14 @@ function Blocker({ kv, geometries, onClicker }) {
     let item = refBlocker.current;
     if (item) {
       if (kv?.value?.wallTexture) {
-        item.material.map = new TextureLoader().load(`${kv.value.wallTexture}`);
+        item.material.map = new TextureLoader().load(
+          `${kv.value.wallTexture}`,
+          () => {},
+          () => {},
+          () => {
+            item.material.map = null;
+          }
+        );
       }
     }
   }, [JSON.stringify(kv)]);
@@ -96,7 +103,12 @@ function Blocker({ kv, geometries, onClicker }) {
       if (kv?.value?.wallTexture) {
         if (CState.refreshBuilding === kv.key) {
           item.material.map = new TextureLoader().load(
-            `${kv.value.wallTexture}`
+            `${kv.value.wallTexture}`,
+            () => {},
+            () => {},
+            () => {
+              item.material.map = null;
+            }
           );
         }
       }

@@ -15,7 +15,12 @@ export function HTMLSidebarEditor() {
         `/maps/${CState.currentMapID}/slotData/${CState.currentSlotID}/owner`
       );
   useEffect(() => {
-    return getOwnerRef().on("value", (snap) => {
+    let left = false;
+
+    let hh = (snap) => {
+      if (left) {
+        return;
+      }
       //
       if (snap) {
         let val = snap.val();
@@ -24,14 +29,20 @@ export function HTMLSidebarEditor() {
             return getOwnerRef().child("buildings").set({});
           } else {
             setBuildings(toArray(val.buildings));
-            return Promise.resolve();
+            return () => {};
           }
         } else {
-          return Promise.resolve();
+          return () => {};
         }
       }
-      return Promise.resolve();
-    });
+      return () => {};
+    };
+    let clean = getOwnerRef().on("value", hh);
+    return () => {
+      left = true;
+      getOwnerRef().off("value", hh);
+      clean();
+    };
   }, []);
 
   return (
