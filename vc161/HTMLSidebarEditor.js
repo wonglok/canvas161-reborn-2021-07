@@ -6,6 +6,8 @@ import { CState, onOpenTextureChooser } from "./CState";
 
 export function HTMLSidebarEditor() {
   CState.makeKeyReactive("panel");
+  CState.makeKeyReactive("onPickGallery");
+
   let [buildings, setBuildings] = useState([]);
 
   let getOwnerRef = () =>
