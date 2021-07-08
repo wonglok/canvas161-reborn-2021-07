@@ -77,6 +77,7 @@ function Blocker({ kv, geometries, onClicker }) {
         metalness={0.5}
         roughness={1}
         color={"#ffffff"}
+        transparent={true}
       ></meshStandardMaterial>
     ),
   };
