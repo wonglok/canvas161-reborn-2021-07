@@ -109,13 +109,13 @@ function WebGLCanvas() {
         }}
       >
         <HDRI></HDRI>
-        {/* <ambientLight intensity={0.5}></ambientLight> */}
-        <ambientLight intensity={0.3}></ambientLight>
+        <ambientLight intensity={0.35}></ambientLight>
+        <ambientLight intensity={0.13}></ambientLight>
         <directionalLight
           position={[-100, 100, 100]}
-          intensity={0.3}
+          intensity={0.13}
         ></directionalLight>
-        <pointLight position={[100, 100, 100]} intensity={0.3}></pointLight>
+        <pointLight position={[100, 100, 100]} intensity={0.13}></pointLight>
 
         {CState.gameMode === "map" && (
           <group visible={true}>
