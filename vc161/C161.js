@@ -21,6 +21,8 @@ import { getFire, toArray } from "../vfx-others/ENFire";
 import router from "next/router";
 // import { MeshBasicMaterial } from "three";
 import { HTMLSidebarEditor } from "./HTMLSidebarEditor";
+// import { Detailed } from "@react-three/drei";
+import { sRGBEncoding } from "three";
 
 export function getPanelHeight() {
   let h = window.innerHeight * 0.25;
@@ -80,6 +82,7 @@ function WebGLCanvas() {
       <Canvas
         dpr={dpr}
         onCreated={({ gl }) => {
+          gl.outputEncoding = sRGBEncoding;
           getGPUTier({ glContext: gl.getContext() }).then((v) => {
             // ipad
             if (v.gpu === "apple a9x gpu") {
@@ -106,17 +109,19 @@ function WebGLCanvas() {
         }}
       >
         <HDRI></HDRI>
-        <ambientLight intensity={0.5}></ambientLight>
+        {/* <ambientLight intensity={0.5}></ambientLight> */}
+        <ambientLight intensity={0.3}></ambientLight>
         <directionalLight
-          position={[10, 10, 10]}
-          intensity={0.5}
+          position={[-100, 100, 100]}
+          intensity={0.3}
         ></directionalLight>
+        <pointLight position={[100, 100, 100]} intensity={0.3}></pointLight>
 
-        {/* {CState.gameMode === "map" && ( */}
-        <group visible={CState.gameMode === "map"}>
-          <GridContent></GridContent>
-        </group>
-        {/* )} */}
+        {CState.gameMode === "map" && (
+          <group visible={true}>
+            <GridContent></GridContent>
+          </group>
+        )}
         {CState.gameMode === "editor" && <GLEditor></GLEditor>}
 
         <UIControls></UIControls>
@@ -170,11 +175,11 @@ function Slot({
   onClickDuringEditMode = () => {},
   onClickSlot = () => {},
 }) {
-  CState.makeKeyReactive("taken");
+  // CState.makeKeyReactive("taken");
 
   let downColor = new Color("#bababa");
   let hoverColor = new Color("#888888");
-  let readyColor = new Color(value.owner?.color || "#ffffff");
+  let readyColor = new Color(value.owner?.color || "#cccccc");
   let radius = 10;
 
   useAutoEvent("touchmove", () => {
@@ -246,13 +251,10 @@ function Slot({
             // }, 100);
           }}
         >
-          <meshStandardMaterial
-            roughness={0.8}
-            metalness={1}
-            color={value?.owner?.color || "#ffffff"}
-          ></meshStandardMaterial>
+          <meshPhongMaterial color={readyColor}></meshPhongMaterial>
           <planeBufferGeometry args={[10, 10]}></planeBufferGeometry>
         </mesh>
+        <group></group>
 
         {
           <ObjectDisplayOfTile
@@ -275,19 +277,19 @@ function Slot({
 
 function GridContent() {
   CState.makeKeyReactive("slotData");
-  CState.makeKeyReactive("taken");
+  // CState.makeKeyReactive("taken");
 
   useEffect(() => {
-    getFire()
-      .database()
-      .ref(`/maps/${CState.currentMapID}/mapData`)
-      .once("value", (snap) => {
-        let v = snap.val();
-        if (v) {
-          CState.mapData = v;
-          console.log(v);
-        }
-      });
+    // getFire()
+    //   .database()
+    //   .ref(`/maps/${CState.currentMapID}/mapData`)
+    //   .once("value", (snap) => {
+    //     let v = snap.val();
+    //     if (v) {
+    //       CState.mapData = v;
+    //       console.log(v);
+    //     }
+    //   });
 
     let cleanSlotData = getFire()
       .database()
@@ -303,23 +305,23 @@ function GridContent() {
         }
       });
 
-    let cleanTakenData = getFire()
-      .database()
-      .ref(`/maps/${CState.currentMapID}/taken`)
-      .on("value", (snap) => {
-        if (snap) {
-          let v = snap.val();
-          if (v) {
-            CState.taken = toArray(v);
-          } else {
-            CState.taken = [];
-          }
-        }
-      });
+    // let cleanTakenData = getFire()
+    //   .database()
+    //   .ref(`/maps/${CState.currentMapID}/taken`)
+    //   .on("value", (snap) => {
+    //     if (snap) {
+    //       let v = snap.val();
+    //       if (v) {
+    //         CState.taken = toArray(v);
+    //       } else {
+    //         CState.taken = [];
+    //       }
+    //     }
+    //   });
 
     return () => {
       cleanSlotData();
-      cleanTakenData();
+      // cleanTakenData();
     };
   }, []);
 
@@ -344,6 +346,16 @@ function GridContent() {
           </group>
         );
       })}
+      {/*
+      <mesh rotation-x={Math.PI * -0.5}>
+        <meshBasicMaterial color={"#232323"}></meshBasicMaterial>
+        <planeBufferGeometry args={[1000, 1000, 2, 2]}></planeBufferGeometry>
+      </mesh> */}
+      <gridHelper
+        raycast={() => {}}
+        position-y={-0.05}
+        args={[1000, 100, "#333333", "#333333"]}
+      ></gridHelper>
 
       {/* Grid Helper */}
       {/* <gridHelper
@@ -363,7 +375,7 @@ function HTMLContent() {
   //
   CState.makeKeyReactive("overlay");
   CState.makeKeyReactive("slotData");
-  CState.makeKeyReactive("taken");
+  // CState.makeKeyReactive("taken");
   CState.makeKeyReactive("gameMode");
 
   CState.useReactiveKey("overlay", () => {

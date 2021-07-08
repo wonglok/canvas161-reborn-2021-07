@@ -54,8 +54,8 @@ function RoomView() {
     <group>
       <PerspectiveCamera
         ref={camera}
-        far={1000}
-        near={5}
+        far={400}
+        near={10}
         fov={45}
         makeDefault
       ></PerspectiveCamera>
@@ -67,7 +67,7 @@ function RoomView() {
         dampingFactor={0.05}
         enabled={true}
         minDistance={30}
-        maxDistance={150}
+        maxDistance={120}
       ></MapControls>
     </group>
   );

@@ -1,5 +1,7 @@
 import { Detailed, Text } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useMemo, useRef } from "react";
+import { Scene, sRGBEncoding } from "three";
 import { Mesh, TextureLoader } from "three";
 import { toArray } from "../vfx-others/ENFire";
 import { CState } from "./CState";
@@ -68,18 +70,19 @@ function Blocker({ kv, value, geometries, onClicker }) {
   CState.makeKeyReactive("refreshBuilding");
 
   //
+  let { scene } = useThree();
   let isDown = false;
 
   let refBlocker = useRef();
   let materials = {
     //
     default: (
-      <meshStandardMaterial
-        metalness={0.5}
-        roughness={1}
+      <meshPhongMaterial
         color={"#ffffff"}
         transparent={true}
-      ></meshStandardMaterial>
+        metalness={1}
+        roughness={0.3}
+      ></meshPhongMaterial>
     ),
   };
 
@@ -89,7 +92,9 @@ function Blocker({ kv, value, geometries, onClicker }) {
       if (kv?.value?.wallTexture) {
         item.material.map = new TextureLoader().load(
           `${kv.value.wallTexture}`,
-          () => {},
+          (tex) => {
+            tex.encoding = sRGBEncoding;
+          },
           () => {},
           () => {
             // /texture/white128.jpg
@@ -113,7 +118,9 @@ function Blocker({ kv, value, geometries, onClicker }) {
 
           item.material.map = new TextureLoader().load(
             `${kv.value.wallTexture}`,
-            () => {},
+            (tex) => {
+              tex.encoding = sRGBEncoding;
+            },
             () => {},
             () => {
               item.material.map = new TextureLoader().load(

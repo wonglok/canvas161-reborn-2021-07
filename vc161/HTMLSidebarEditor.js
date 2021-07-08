@@ -274,7 +274,7 @@ function UploadButton() {
               let Pica = require("pica");
 
               const pica = new Pica({
-                tile: 1024,
+                tile: 512,
               });
 
               // Resize from Canvas/Image to another Canvas
@@ -283,8 +283,15 @@ function UploadButton() {
               let img = document.createElement("img");
               img.src = URL.createObjectURL(first);
               img.onload = () => {
-                to.width = img.width;
-                to.height = img.height;
+                let a = img.width / img.height;
+
+                if (a >= 1) {
+                  to.width = 512;
+                  to.height = 512 / a;
+                } else {
+                  to.width = 512 * a;
+                  to.height = 512;
+                }
 
                 pica
                   .resize(img, to, {
