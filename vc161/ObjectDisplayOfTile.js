@@ -11,6 +11,8 @@ export function ObjectDisplayOfTile({ value, onClicker = () => {} }) {
 
   let buildings = toArray(buildingObj);
 
+  console.log(buildings);
+
   let aroundWidth = 4.5;
   let levelHeight = aroundWidth / 1.1618;
   let geometries = {
@@ -76,41 +78,46 @@ function Blocker({ kv, value, geometries, onClicker }) {
     //
     default: (
       <meshPhongMaterial
-        color={"#bababa"}
         transparent={true}
         metalness={1}
         roughness={0.3}
+        opacity={1}
       ></meshPhongMaterial>
     ),
   };
 
-  useEffect(() => {
-    let texture = kv?.value?.wallTexture;
-    if (texture) {
-      new TextureLoader().load(
-        texture,
-        (tex) => {
-          tex.encoding = sRGBEncoding;
-          refBlocker.current.material.map = tex;
-        },
-        () => {},
-        () => {
-          refBlocker.current.material.map = null;
-          // new TextureLoader().load(
-          //   `/texture/placeholder.png`,
-          //   (tex) => {
-          //     tex.encoding = sRGBEncoding;
-          //     refBlocker.current.material.map = tex;
-          //   },
-          //   () => {},
-          //   () => {
-          //     refBlocker.current.material.map = null;
-          //   }
-          // );
-        }
-      );
+  useEffect(async () => {
+    let refURL = kv?.value?.wallTexture;
+    if (refURL) {
+      let textureRef = getFire().storage().ref(refURL);
+      textureRef.getDownloadURL().then((texture) => {
+        new TextureLoader().load(
+          texture,
+          (tex) => {
+            tex.encoding = sRGBEncoding;
+            refBlocker.current.material.map = tex;
+            refBlocker.current.material.needsUpdate = true;
+          },
+          () => {},
+          () => {
+            refBlocker.current.material.map = null;
+
+            // new TextureLoader().load(
+            //   `/texture/placeholder.png`,
+            //   (tex) => {
+            //     tex.encoding = sRGBEncoding;
+            //     refBlocker.current.material.map = tex;
+            //   },
+            //   () => {},
+            //   () => {
+            //     refBlocker.current.material.map = null;
+            //   }
+            // );
+          }
+        );
+      }); //
     }
-  }, [value]);
+  }, [value, CState.refreshBuilding]);
 
   return (
     <mesh

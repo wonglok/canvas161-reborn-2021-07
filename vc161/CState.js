@@ -97,8 +97,6 @@ export const obtainSlot = ({ mapID, slotID }) => {
 //                 CState.currentSlotID = v.data.slotID;
 //                 CState.overlay = "slot";
 
-export function uploadFileToUser() {}
-
 export function onOpenTextureChooser({ buildingKey }) {
   CState.onPickGallery = ({ data }) => {
     //
@@ -111,7 +109,7 @@ export function onOpenTextureChooser({ buildingKey }) {
       .child("buildings")
       .child(buildingKey)
       .child("wallTexture")
-      .set(data.itemURL)
+      .set(data.refURL)
       .then(() => {
         console.log("wallpaper set");
         CState.refreshBuilding++;

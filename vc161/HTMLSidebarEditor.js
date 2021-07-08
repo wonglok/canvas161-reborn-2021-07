@@ -87,8 +87,8 @@ export function HTMLSidebarEditor() {
           <div className="ml-3 inline-block">Back</div>
         </div>
 
-        <div className="h-full w-full flex overflow-scroll-x ">
-          <div className="h-full overflow-scroll w-52">
+        <div className="h-full w-full ">
+          <div className="h-full overflow-scroll w-full">
             <div>
               {buildings.length <= 10 && (
                 <div
@@ -98,13 +98,17 @@ export function HTMLSidebarEditor() {
                     if (buildings.length <= 10) {
                       let item = getOwnerRef().child("buildings").push();
 
-                      item.set({
-                        type: "blocker",
-                        draw: "mesh",
-                        geometry: "box",
-                        material: "default",
-                        wallTexture: ``,
-                      });
+                      item
+                        .set({
+                          type: "blocker",
+                          draw: "mesh",
+                          geometry: "box",
+                          material: "default",
+                          wallTexture: ``,
+                        })
+                        .then(() => {
+                          CState.refreshBuilding++;
+                        });
                     }
                   }}
                 >
@@ -190,7 +194,11 @@ function GalleryItems({ onPick = () => {} }) {
             let itemURL = await itemRef.getDownloadURL();
             // let meta = await itemRef.getMetadata();
 
-            resolve({ key: itemRef.name, itemURL });
+            resolve({
+              key: itemRef.name,
+              itemURL,
+              refURL: `/buildings/${uid}/${itemRef.name}`,
+            });
           });
         });
         Promise.all(allItems).then((v) => {

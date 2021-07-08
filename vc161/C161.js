@@ -108,14 +108,8 @@ function WebGLCanvas() {
           });
         }}
       >
+        <ambientLight intensity={1}></ambientLight>
         <HDRI></HDRI>
-        <ambientLight intensity={0.35}></ambientLight>
-        <ambientLight intensity={0.13}></ambientLight>
-        <directionalLight
-          position={[-100, 100, 100]}
-          intensity={0.13}
-        ></directionalLight>
-        <pointLight position={[100, 100, 100]} intensity={0.13}></pointLight>
 
         {CState.gameMode === "map" && (
           <group visible={true}>
@@ -131,6 +125,7 @@ function WebGLCanvas() {
 }
 
 function GLEditor() {
+  CState.makeKeyReactive("refreshBuilding");
   let [value, setValue] = useState(false);
 
   useEffect(() => {
@@ -146,11 +141,9 @@ function GLEditor() {
       .database()
       .ref(`/maps/${CState.currentMapID}/slotData/${CState.currentSlotID}`);
 
-    refPoint.on("value", hh);
-    return () => {
-      refPoint.off("value", hh);
-    };
-  }, []);
+    refPoint.once("value", hh);
+    return () => {};
+  }, [CState.refreshBuilding]);
 
   return (
     <group>
@@ -179,7 +172,7 @@ function Slot({
 
   let downColor = new Color("#bababa");
   let hoverColor = new Color("#888888");
-  let readyColor = new Color(value.owner?.color || "#cccccc");
+  let readyColor = new Color(value.owner?.color || "#444444");
   let radius = 10;
 
   useAutoEvent("touchmove", () => {
