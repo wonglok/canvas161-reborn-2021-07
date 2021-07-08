@@ -1,8 +1,8 @@
 import { Detailed, Text } from "@react-three/drei";
-import { useThree } from "@react-three/fiber";
-import { Suspense, useEffect, useMemo, useRef } from "react";
-import { Scene, sRGBEncoding } from "three";
-import { Mesh, TextureLoader } from "three";
+// import { useThree } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
+import { sRGBEncoding } from "three";
+import { TextureLoader } from "three";
 import { getFire, toArray } from "../vfx-others/ENFire";
 import { CState } from "./CState";
 
