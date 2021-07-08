@@ -31,6 +31,7 @@ export function HTMLSidebarEditor() {
             setBuildings(toArray(val.buildings));
             return () => {};
           }
+          //
         } else {
           return () => {};
         }
@@ -271,6 +272,7 @@ function GalleryOneItem({ data = {}, onPick = () => {} }) {
 
 function UploadButton() {
   let ref = useRef();
+  let [txt, setTxt] = useState("");
   return (
     <>
       <input className="hidden" ref={ref} type="file"></input>
@@ -284,23 +286,70 @@ function UploadButton() {
             let first = files[0];
             if (first) {
               //
-              let uid = getFire().auth().currentUser?.uid;
-              if (uid) {
-                let fireRef = getFire().storage().ref(`/buildings/${uid}/`);
-                fireRef
-                  .child(getID())
-                  .put(first)
-                  .then((snap) => {
-                    CState.refreshGallery++;
-                    console.log("Uploaded a blob or file!");
+              setTxt("resizing....");
+              let Pica = require("pica");
+
+              const pica = new Pica({
+                tile: 1024,
+              });
+
+              // Resize from Canvas/Image to another Canvas
+              let to = document.createElement("canvas");
+
+              let img = document.createElement("img");
+              img.src = URL.createObjectURL(first);
+              img.onload = () => {
+                to.width = img.width;
+                to.height = img.height;
+
+                pica
+                  .resize(img, to, {
+                    alpha: true,
+                    // - //
+
+                    //
+
+                    // unsharpAmount: 160,
+                    // unsharpRadius: 0.6,
+                    // unsharpThreshold: 1
+
+                    //
+                  })
+                  .then((result) => pica.toBlob(result, "image/jpeg", 0.9))
+                  .then((blob) => {
+                    //
+                    setTxt("uploading....");
+
+                    console.log("resized to canvas & created blob!");
+
+                    let uid = getFire().auth().currentUser?.uid;
+                    if (uid) {
+                      let fireRef = getFire()
+                        .storage()
+                        .ref(`/buildings/${uid}/`);
+                      fireRef
+                        .child(getID())
+                        .put(blob)
+                        .then((snap) => {
+                          CState.refreshGallery++;
+                          console.log("Uploaded a blob or file!");
+                          setTxt("reloading....");
+
+                          setTimeout(() => {
+                            setTxt("");
+                          }, 1000);
+                        });
+                    }
+
+                    //
                   });
-              }
+              };
             }
           };
           ref.current.click();
         }}
       >
-        Upload Texture
+        Upload Texture {txt}
       </button>
     </>
   );

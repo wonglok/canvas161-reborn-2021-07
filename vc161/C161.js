@@ -129,20 +129,22 @@ function Editor() {
   let [value, setValue] = useState(false);
 
   useEffect(() => {
-    return (
-      //
-      getFire()
-        .database()
-        .ref(`/maps/${CState.currentMapID}/slotData/${CState.currentSlotID}`)
-        .on("value", (snap) => {
-          if (snap) {
-            let val = snap.val();
-            if (val) {
-              setValue(val);
-            }
-          }
-        })
-    );
+    let hh = (snap) => {
+      if (snap) {
+        let val = snap.val();
+        if (val) {
+          setValue(val);
+        }
+      }
+    };
+    let refPoint = getFire()
+      .database()
+      .ref(`/maps/${CState.currentMapID}/slotData/${CState.currentSlotID}`);
+
+    refPoint.on("value", hh);
+    return () => {
+      refPoint.off("value", hh);
+    };
   }, []);
 
   return (

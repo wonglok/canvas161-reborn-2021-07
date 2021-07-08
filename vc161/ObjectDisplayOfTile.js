@@ -90,7 +90,10 @@ function Blocker({ kv, geometries, onClicker }) {
           () => {},
           () => {},
           () => {
-            item.material.map = null;
+            // /texture/white128.jpg
+            item.material.map = new TextureLoader().load(
+              `/texture/placeholder.png`
+            );
           }
         );
       }
@@ -107,7 +110,9 @@ function Blocker({ kv, geometries, onClicker }) {
             () => {},
             () => {},
             () => {
-              item.material.map = null;
+              item.material.map = new TextureLoader().load(
+                `/texture/placeholder.png`
+              );
             }
           );
         }
