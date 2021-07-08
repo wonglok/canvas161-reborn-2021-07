@@ -15,18 +15,16 @@ export function ObjectDisplayOfTile({ value, onClicker = () => {} }) {
 
   let aroundWidth = 4.5;
   let levelHeight = aroundWidth / 1.1618;
+
+  let box = (
+    <boxBufferGeometry
+      args={[aroundWidth, levelHeight, levelHeight, 2, 2, 2]}
+    ></boxBufferGeometry>
+  );
   let geometries = {
     //
-    box: (
-      <boxBufferGeometry
-        args={[aroundWidth, levelHeight, levelHeight, 2, 2, 2]}
-      ></boxBufferGeometry>
-    ),
-    ball: (
-      <boxBufferGeometry
-        args={[aroundWidth, levelHeight, levelHeight, 2, 2, 2]}
-      ></boxBufferGeometry>
-    ),
+    box: box,
+    ball: box,
   };
 
   return (
